@@ -18,19 +18,19 @@ public class Main {
     public static Config CONFIG;
     public static void main(String[] args) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        new OrderWindow().setVisible(true);
-        /*CONFIG = new Config(Config.getConfigFile("data"));
+        CONFIG = new Config(Config.getConfigFile("data"));
         loadRestaurants();
         loadStudents();
-        MainFrame f = new MainFrame();
-        f.setVisible(true);
-        debug();*/
+        //MainFrame f = new MainFrame();
+        //f.setVisible(true);
+        debug();
+        new OrderWindow().setVisible(true);
     }
     private static void debug() {
-        if (Restaurant.RESTAURANTS.size() == 0) Restaurant.RESTAURANTS.add(new RestaurantBuilder("有春茶館").
+        if (Restaurant.RESTAURANTS.size() == 0) new RestaurantBuilder("有春茶館").
                 withTel("0933778701").withMeal("烏龍春茶",65)
                 .withMeal("烏龍春奶茶",75).withMeal("芋泥波波奶綠",85)
-                .withMeal("荔枝花蜜茶",80).withMeal("有春紅茶",65).build());
+                .withMeal("荔枝花蜜茶",80).withMeal("有春紅茶",65).build();
     }
     public static void loadRestaurants() {
         List<Restaurant> rest = CONFIG.getList("restaurants", Restaurant.class);

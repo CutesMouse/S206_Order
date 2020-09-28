@@ -4,21 +4,145 @@
 
 package com.cutesmouse.s206Order.window;
 
+import java.awt.event.*;
+
+import com.cutesmouse.s206Order.Main;
+import com.cutesmouse.s206Order.restaurant.Restaurant;
+import com.cutesmouse.s206Order.restaurant.RestaurantBuilder;
+import com.cutesmouse.s206Order.time.TimeStamp;
+import com.cutesmouse.s206Order.utils.DisplayText;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
 
 /**
  * @author CutesMouse
  */
 public class OrderWindow extends JFrame {
+    private int weekOffset;
     public OrderWindow() {
         initComponents();
-        DayBlock db = new DayBlock();
         OrderPicker.addSubmitListener(this::orderPicker);
+        weekOffset = Calendar.getInstance(TimeZone.getDefault()).get(Calendar.WEEK_OF_MONTH);
+        loadNest();
+        restaurants.addListSelectionListener(this::valueChanged);
+        refresh(null);
+    }
+    private void loadNest() {
+        daysNest.removeAll();
+        Calendar cal = Calendar.getInstance(TimeZone.getDefault());
+        int week = weekOffset;
+        cal.set(Calendar.WEEK_OF_MONTH, week);
+        week = cal.get(Calendar.WEEK_OF_MONTH);
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+
+
+        int from = 1;
+        int end = 7;
+        if (week == 1) {
+            System.out.println(cal.get(Calendar.DAY_OF_MONTH));
+            from = cal.get(Calendar.DAY_OF_WEEK);
+            end = 7;
+        }
+        if (week == cal.getActualMaximum(Calendar.WEEK_OF_MONTH)) {
+            from = 1;
+            cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + 1);
+            cal.set(Calendar.DAY_OF_MONTH, 0);
+            end = cal.get(Calendar.DAY_OF_WEEK);
+        }
+        if (from > 1) {
+            for (int i = 1; i < from; i++) {
+                daysNest.add(new DayBlock(new TimeStamp(year, month, week, i), true));
+            }
+        }
+        for (int i = from; i <= end; i++) {
+            daysNest.add(new DayBlock(new TimeStamp(year, month, week, i)));
+        }
+        if (end != 7) {
+            for (int i = end + 1; i <= 7; i++) {
+                daysNest.add(new DayBlock(new TimeStamp(year, month, week, i), true));
+            }
+        }
+        daysNest.updateUI();
     }
     public void orderPicker(ActionEvent e) {
         System.out.println(OrderPicker.getTimeStamp());
+    }
+
+    private void next_week(ActionEvent e) {
+        weekOffset++;
+        loadNest();
+    }
+
+    private void last_week(ActionEvent e) {
+        weekOffset--;
+        loadNest();
+    }
+
+    private void refresh(ActionEvent e) {
+        remove.setEnabled(false);
+        edit.setEnabled(false);
+        restaurants.setListData(Restaurant.RESTAURANTS.toArray());
+    }
+
+    private void add(ActionEvent e) {
+        new CreateResturant(new RestaurantBuilder()).setVisible(true);
+    }
+
+    private void remove(ActionEvent e) {
+        Object o = restaurants.getSelectedValue();
+        if (o == null) {
+            remove.setEnabled(false);
+            edit.setEnabled(false);
+            return;
+        }
+        Restaurant.RESTAURANTS.remove(o);
+        refresh(e);
+    }
+
+    private void edit(ActionEvent e) {
+        Object o = restaurants.getSelectedValue();
+        if (o == null) {
+            remove.setEnabled(false);
+            edit.setEnabled(false);
+            return;
+        }
+        new CreateResturant(((Restaurant) o)).setVisible(true);
+    }
+
+    private void valueChanged(ListSelectionEvent e) {
+        Object o = restaurants.getSelectedValue();
+        if (o == null) {
+            remove.setEnabled(false);
+            edit.setEnabled(false);
+        } else {
+            remove.setEnabled(true);
+            edit.setEnabled(true);
+        }
+    }
+
+    private void sort(ActionEvent e) {
+        ArrayList<Restaurant> c = new ArrayList<>(Restaurant.RESTAURANTS);
+        Collections.sort(c, Comparator.comparing(p -> p.name));
+        restaurants.setListData(c.toArray());
+        remove.setEnabled(false);
+        edit.setEnabled(false);
+    }
+
+    private void setToday(ActionEvent e) {
+        weekOffset = Calendar.getInstance(TimeZone.getDefault()).get(Calendar.WEEK_OF_MONTH);
+        loadNest();
+    }
+
+    private void thisWindowClosing(WindowEvent e) {
+        Main.end();
+        dispose();
+        System.exit(0);
     }
 
     private void initComponents() {
@@ -34,38 +158,29 @@ public class OrderWindow extends JFrame {
         settings = new JScrollPane();
         panel2 = new JPanel();
         textField1 = new JTextField();
-        panel3 = new JPanel();
-        panel6 = new JPanel();
-        textField3 = new JTextField();
-        button9 = new JButton();
-        textField10 = new JTextField();
-        panel7 = new JPanel();
-        textField4 = new JTextField();
-        button10 = new JButton();
-        textField11 = new JTextField();
-        panel8 = new JPanel();
-        textField5 = new JTextField();
-        button11 = new JButton();
-        textField12 = new JTextField();
-        panel9 = new JPanel();
-        textField6 = new JTextField();
-        button12 = new JButton();
-        textField13 = new JTextField();
-        panel10 = new JPanel();
-        textField7 = new JTextField();
-        button13 = new JButton();
-        textField14 = new JTextField();
-        panel11 = new JPanel();
-        textField8 = new JTextField();
-        button14 = new JButton();
-        textField15 = new JTextField();
-        panel12 = new JPanel();
-        textField9 = new JTextField();
-        button15 = new JButton();
-        textField16 = new JTextField();
+        daysNest = new JPanel();
+        button1 = new JButton();
+        button2 = new JButton();
+        this2 = new JPanel();
+        scrollPane1 = new JScrollPane();
+        restaurants = new JList();
+        edit = new JButton();
+        add = new JButton();
+        remove = new JButton();
+        refresh = new JButton();
+        refresh2 = new JButton();
+        button3 = new JButton();
 
         //======== this ========
         setTitle("\u9ede\u9910\u4ecb\u9762");
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setIconImage(new ImageIcon(getClass().getResource("/icon.png")).getImage());
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                thisWindowClosing(e);
+            }
+        });
         Container contentPane = getContentPane();
         contentPane.setLayout(null);
 
@@ -114,297 +229,120 @@ public class OrderWindow extends JFrame {
                     panel2.add(textField1);
                     textField1.setBounds(25, 30, 105, 40);
 
-                    //======== panel3 ========
+                    //======== daysNest ========
                     {
-                        panel3.setLayout(new FlowLayout());
-
-                        //======== panel6 ========
-                        {
-                            panel6.setPreferredSize(new Dimension(150, 210));
-                            panel6.setLayout(new BoxLayout(panel6, BoxLayout.Y_AXIS));
-
-                            //---- textField3 ----
-                            textField3.setText("\u661f\u671f\u65e5");
-                            textField3.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
-                            textField3.setEditable(false);
-                            textField3.setFocusable(false);
-                            textField3.setBorder(null);
-                            textField3.setHorizontalAlignment(SwingConstants.CENTER);
-                            textField3.setMinimumSize(new Dimension(10, 32));
-                            textField3.setPreferredSize(new Dimension(20, 30));
-                            panel6.add(textField3);
-
-                            //---- button9 ----
-                            button9.setPreferredSize(new Dimension(150, 150));
-                            button9.setIcon(new ImageIcon(getClass().getResource("/blank.png")));
-                            button9.setBorderPainted(false);
-                            button9.setOpaque(false);
-                            button9.setFocusPainted(false);
-                            button9.setContentAreaFilled(false);
-                            panel6.add(button9);
-
-                            //---- textField10 ----
-                            textField10.setText("x/x");
-                            textField10.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
-                            textField10.setEditable(false);
-                            textField10.setFocusable(false);
-                            textField10.setBorder(null);
-                            textField10.setHorizontalAlignment(SwingConstants.CENTER);
-                            textField10.setMinimumSize(new Dimension(10, 32));
-                            textField10.setPreferredSize(new Dimension(20, 30));
-                            panel6.add(textField10);
-                        }
-                        panel3.add(panel6);
-
-                        //======== panel7 ========
-                        {
-                            panel7.setPreferredSize(new Dimension(150, 210));
-                            panel7.setLayout(new BoxLayout(panel7, BoxLayout.Y_AXIS));
-
-                            //---- textField4 ----
-                            textField4.setText("\u661f\u671f\u4e00");
-                            textField4.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
-                            textField4.setEditable(false);
-                            textField4.setFocusable(false);
-                            textField4.setBorder(null);
-                            textField4.setHorizontalAlignment(SwingConstants.CENTER);
-                            textField4.setMinimumSize(new Dimension(10, 32));
-                            textField4.setPreferredSize(new Dimension(20, 30));
-                            panel7.add(textField4);
-
-                            //---- button10 ----
-                            button10.setPreferredSize(new Dimension(150, 150));
-                            button10.setIcon(new ImageIcon(getClass().getResource("/blank.png")));
-                            button10.setBorderPainted(false);
-                            button10.setOpaque(false);
-                            button10.setFocusPainted(false);
-                            button10.setContentAreaFilled(false);
-                            panel7.add(button10);
-
-                            //---- textField11 ----
-                            textField11.setText("x/x");
-                            textField11.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
-                            textField11.setEditable(false);
-                            textField11.setFocusable(false);
-                            textField11.setBorder(null);
-                            textField11.setHorizontalAlignment(SwingConstants.CENTER);
-                            textField11.setMinimumSize(new Dimension(10, 32));
-                            textField11.setPreferredSize(new Dimension(20, 30));
-                            panel7.add(textField11);
-                        }
-                        panel3.add(panel7);
-
-                        //======== panel8 ========
-                        {
-                            panel8.setPreferredSize(new Dimension(150, 210));
-                            panel8.setLayout(new BoxLayout(panel8, BoxLayout.Y_AXIS));
-
-                            //---- textField5 ----
-                            textField5.setText("\u661f\u671f\u4e8c");
-                            textField5.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
-                            textField5.setEditable(false);
-                            textField5.setFocusable(false);
-                            textField5.setBorder(null);
-                            textField5.setHorizontalAlignment(SwingConstants.CENTER);
-                            textField5.setMinimumSize(new Dimension(10, 32));
-                            textField5.setPreferredSize(new Dimension(20, 30));
-                            panel8.add(textField5);
-
-                            //---- button11 ----
-                            button11.setPreferredSize(new Dimension(150, 150));
-                            button11.setIcon(new ImageIcon(getClass().getResource("/blank.png")));
-                            button11.setBorderPainted(false);
-                            button11.setOpaque(false);
-                            button11.setFocusPainted(false);
-                            button11.setContentAreaFilled(false);
-                            panel8.add(button11);
-
-                            //---- textField12 ----
-                            textField12.setText("x/x");
-                            textField12.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
-                            textField12.setEditable(false);
-                            textField12.setFocusable(false);
-                            textField12.setBorder(null);
-                            textField12.setHorizontalAlignment(SwingConstants.CENTER);
-                            textField12.setMinimumSize(new Dimension(10, 32));
-                            textField12.setPreferredSize(new Dimension(20, 30));
-                            panel8.add(textField12);
-                        }
-                        panel3.add(panel8);
-
-                        //======== panel9 ========
-                        {
-                            panel9.setPreferredSize(new Dimension(150, 210));
-                            panel9.setLayout(new BoxLayout(panel9, BoxLayout.Y_AXIS));
-
-                            //---- textField6 ----
-                            textField6.setText("\u661f\u671f\u4e09");
-                            textField6.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
-                            textField6.setEditable(false);
-                            textField6.setFocusable(false);
-                            textField6.setBorder(null);
-                            textField6.setHorizontalAlignment(SwingConstants.CENTER);
-                            textField6.setMinimumSize(new Dimension(10, 32));
-                            textField6.setPreferredSize(new Dimension(20, 30));
-                            panel9.add(textField6);
-
-                            //---- button12 ----
-                            button12.setPreferredSize(new Dimension(150, 150));
-                            button12.setIcon(new ImageIcon(getClass().getResource("/blank.png")));
-                            button12.setBorderPainted(false);
-                            button12.setOpaque(false);
-                            button12.setFocusPainted(false);
-                            button12.setContentAreaFilled(false);
-                            panel9.add(button12);
-
-                            //---- textField13 ----
-                            textField13.setText("x/x");
-                            textField13.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
-                            textField13.setEditable(false);
-                            textField13.setFocusable(false);
-                            textField13.setBorder(null);
-                            textField13.setHorizontalAlignment(SwingConstants.CENTER);
-                            textField13.setMinimumSize(new Dimension(10, 32));
-                            textField13.setPreferredSize(new Dimension(20, 30));
-                            panel9.add(textField13);
-                        }
-                        panel3.add(panel9);
-
-                        //======== panel10 ========
-                        {
-                            panel10.setPreferredSize(new Dimension(150, 210));
-                            panel10.setLayout(new BoxLayout(panel10, BoxLayout.Y_AXIS));
-
-                            //---- textField7 ----
-                            textField7.setText("\u661f\u671f\u56db");
-                            textField7.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
-                            textField7.setEditable(false);
-                            textField7.setFocusable(false);
-                            textField7.setBorder(null);
-                            textField7.setHorizontalAlignment(SwingConstants.CENTER);
-                            textField7.setMinimumSize(new Dimension(10, 32));
-                            textField7.setPreferredSize(new Dimension(20, 30));
-                            panel10.add(textField7);
-
-                            //---- button13 ----
-                            button13.setPreferredSize(new Dimension(150, 150));
-                            button13.setIcon(new ImageIcon(getClass().getResource("/blank.png")));
-                            button13.setBorderPainted(false);
-                            button13.setOpaque(false);
-                            button13.setFocusPainted(false);
-                            button13.setContentAreaFilled(false);
-                            panel10.add(button13);
-
-                            //---- textField14 ----
-                            textField14.setText("x/x");
-                            textField14.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
-                            textField14.setEditable(false);
-                            textField14.setFocusable(false);
-                            textField14.setBorder(null);
-                            textField14.setHorizontalAlignment(SwingConstants.CENTER);
-                            textField14.setMinimumSize(new Dimension(10, 32));
-                            textField14.setPreferredSize(new Dimension(20, 30));
-                            panel10.add(textField14);
-                        }
-                        panel3.add(panel10);
-
-                        //======== panel11 ========
-                        {
-                            panel11.setPreferredSize(new Dimension(150, 210));
-                            panel11.setLayout(new BoxLayout(panel11, BoxLayout.Y_AXIS));
-
-                            //---- textField8 ----
-                            textField8.setText("\u661f\u671f\u4e94");
-                            textField8.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
-                            textField8.setEditable(false);
-                            textField8.setFocusable(false);
-                            textField8.setBorder(null);
-                            textField8.setHorizontalAlignment(SwingConstants.CENTER);
-                            textField8.setMinimumSize(new Dimension(10, 32));
-                            textField8.setPreferredSize(new Dimension(20, 30));
-                            panel11.add(textField8);
-
-                            //---- button14 ----
-                            button14.setPreferredSize(new Dimension(150, 150));
-                            button14.setIcon(new ImageIcon(getClass().getResource("/blank.png")));
-                            button14.setBorderPainted(false);
-                            button14.setOpaque(false);
-                            button14.setFocusPainted(false);
-                            button14.setContentAreaFilled(false);
-                            panel11.add(button14);
-
-                            //---- textField15 ----
-                            textField15.setText("x/x");
-                            textField15.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
-                            textField15.setEditable(false);
-                            textField15.setFocusable(false);
-                            textField15.setBorder(null);
-                            textField15.setHorizontalAlignment(SwingConstants.CENTER);
-                            textField15.setMinimumSize(new Dimension(10, 32));
-                            textField15.setPreferredSize(new Dimension(20, 30));
-                            panel11.add(textField15);
-                        }
-                        panel3.add(panel11);
-
-                        //======== panel12 ========
-                        {
-                            panel12.setPreferredSize(new Dimension(150, 210));
-                            panel12.setLayout(new BoxLayout(panel12, BoxLayout.Y_AXIS));
-
-                            //---- textField9 ----
-                            textField9.setText("\u661f\u671f\u516d");
-                            textField9.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
-                            textField9.setEditable(false);
-                            textField9.setFocusable(false);
-                            textField9.setBorder(null);
-                            textField9.setHorizontalAlignment(SwingConstants.CENTER);
-                            textField9.setMinimumSize(new Dimension(10, 32));
-                            textField9.setPreferredSize(new Dimension(20, 30));
-                            panel12.add(textField9);
-
-                            //---- button15 ----
-                            button15.setPreferredSize(new Dimension(150, 150));
-                            button15.setIcon(new ImageIcon(getClass().getResource("/blank.png")));
-                            button15.setBorderPainted(false);
-                            button15.setOpaque(false);
-                            button15.setFocusPainted(false);
-                            button15.setContentAreaFilled(false);
-                            panel12.add(button15);
-
-                            //---- textField16 ----
-                            textField16.setText("x/x");
-                            textField16.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
-                            textField16.setEditable(false);
-                            textField16.setFocusable(false);
-                            textField16.setBorder(null);
-                            textField16.setHorizontalAlignment(SwingConstants.CENTER);
-                            textField16.setMinimumSize(new Dimension(10, 32));
-                            textField16.setPreferredSize(new Dimension(20, 30));
-                            panel12.add(textField16);
-                        }
-                        panel3.add(panel12);
+                        daysNest.setPreferredSize(new Dimension(10, 210));
+                        daysNest.setLayout(new FlowLayout());
                     }
-                    panel2.add(panel3);
-                    panel3.setBounds(25, 70, 1135, 235);
+                    panel2.add(daysNest);
+                    daysNest.setBounds(25, 70, 1135, 235);
 
+                    //---- button1 ----
+                    button1.setIcon(new ImageIcon(getClass().getResource("/left_next.png")));
+                    button1.setBorder(null);
+                    button1.setOpaque(false);
+                    button1.setBorderPainted(false);
+                    button1.setFocusPainted(false);
+                    button1.setContentAreaFilled(false);
+                    button1.addActionListener(e -> next_week(e));
+                    panel2.add(button1);
+                    button1.setBounds(172, 35, 30, 30);
+
+                    //---- button2 ----
+                    button2.setIcon(new ImageIcon(getClass().getResource("/last_page.png")));
+                    button2.setBorder(null);
+                    button2.setOpaque(false);
+                    button2.setBorderPainted(false);
+                    button2.setFocusPainted(false);
+                    button2.setContentAreaFilled(false);
+                    button2.addActionListener(e -> last_week(e));
+                    panel2.add(button2);
+                    button2.setBounds(135, 35, 30, 30);
+
+                    //======== this2 ========
                     {
-                        // compute preferred size
-                        Dimension preferredSize = new Dimension();
-                        for(int i = 0; i < panel2.getComponentCount(); i++) {
-                            Rectangle bounds = panel2.getComponent(i).getBounds();
-                            preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
-                            preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
+                        this2.setLayout(null);
+
+                        //======== scrollPane1 ========
+                        {
+
+                            //---- restaurants ----
+                            restaurants.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 16));
+                            scrollPane1.setViewportView(restaurants);
                         }
-                        Insets insets = panel2.getInsets();
-                        preferredSize.width += insets.right;
-                        preferredSize.height += insets.bottom;
-                        panel2.setMinimumSize(preferredSize);
-                        panel2.setPreferredSize(preferredSize);
+                        this2.add(scrollPane1);
+                        scrollPane1.setBounds(0, 20, 1080, 255);
+
+                        //---- edit ----
+                        edit.setForeground(Color.red);
+                        edit.setIcon(new ImageIcon(getClass().getResource("/edit.png")));
+                        edit.setBorderPainted(false);
+                        edit.setContentAreaFilled(false);
+                        edit.setEnabled(false);
+                        edit.addActionListener(e -> edit(e));
+                        this2.add(edit);
+                        edit.setBounds(1090, 95, 30, 30);
+
+                        //---- add ----
+                        add.setForeground(new Color(0, 153, 0));
+                        add.setIcon(new ImageIcon(getClass().getResource("/add.png")));
+                        add.setBorder(null);
+                        add.setOpaque(false);
+                        add.setBorderPainted(false);
+                        add.setContentAreaFilled(false);
+                        add.setFocusPainted(false);
+                        add.addActionListener(e -> add(e));
+                        this2.add(add);
+                        add.setBounds(1090, 25, 30, 30);
+
+                        //---- remove ----
+                        remove.setForeground(Color.red);
+                        remove.setIcon(new ImageIcon(getClass().getResource("/minus.png")));
+                        remove.setBorderPainted(false);
+                        remove.setContentAreaFilled(false);
+                        remove.setEnabled(false);
+                        remove.setFocusPainted(false);
+                        remove.addActionListener(e -> remove(e));
+                        this2.add(remove);
+                        remove.setBounds(1090, 60, 30, 30);
+
+                        //---- refresh ----
+                        refresh.setForeground(Color.red);
+                        refresh.setIcon(new ImageIcon(getClass().getResource("/refresh.png")));
+                        refresh.setBorderPainted(false);
+                        refresh.setContentAreaFilled(false);
+                        refresh.setFocusPainted(false);
+                        refresh.addActionListener(e -> refresh(e));
+                        this2.add(refresh);
+                        refresh.setBounds(1090, 130, 30, 30);
+
+                        //---- refresh2 ----
+                        refresh2.setForeground(Color.red);
+                        refresh2.setIcon(new ImageIcon(getClass().getResource("/sort.png")));
+                        refresh2.setBorderPainted(false);
+                        refresh2.setContentAreaFilled(false);
+                        refresh2.setFocusPainted(false);
+                        refresh2.addActionListener(e -> sort(e));
+                        this2.add(refresh2);
+                        refresh2.setBounds(1090, 240, 30, 30);
                     }
+                    panel2.add(this2);
+                    this2.setBounds(25, 330, 1135, 280);
+
+                    //---- button3 ----
+                    button3.setIcon(new ImageIcon(getClass().getResource("/today.png")));
+                    button3.setBorder(null);
+                    button3.setOpaque(false);
+                    button3.setBorderPainted(false);
+                    button3.setFocusPainted(false);
+                    button3.setContentAreaFilled(false);
+                    button3.addActionListener(e -> setToday(e));
+                    panel2.add(button3);
+                    button3.setBounds(209, 35, 30, 30);
                 }
                 settings.setViewportView(panel2);
             }
-            tabbedPane1.addTab("\u8a2d\u5b9a", settings);
+            tabbedPane1.addTab("\u83dc\u55ae\u8a2d\u5b9a", settings);
         }
         contentPane.add(tabbedPane1);
         tabbedPane1.setBounds(0, 0, 1170, 690);
@@ -440,34 +378,17 @@ public class OrderWindow extends JFrame {
     private JScrollPane settings;
     private JPanel panel2;
     private JTextField textField1;
-    private JPanel panel3;
-    private JPanel panel6;
-    private JTextField textField3;
-    private JButton button9;
-    private JTextField textField10;
-    private JPanel panel7;
-    private JTextField textField4;
-    private JButton button10;
-    private JTextField textField11;
-    private JPanel panel8;
-    private JTextField textField5;
-    private JButton button11;
-    private JTextField textField12;
-    private JPanel panel9;
-    private JTextField textField6;
-    private JButton button12;
-    private JTextField textField13;
-    private JPanel panel10;
-    private JTextField textField7;
-    private JButton button13;
-    private JTextField textField14;
-    private JPanel panel11;
-    private JTextField textField8;
-    private JButton button14;
-    private JTextField textField15;
-    private JPanel panel12;
-    private JTextField textField9;
-    private JButton button15;
-    private JTextField textField16;
+    private JPanel daysNest;
+    private JButton button1;
+    private JButton button2;
+    private JPanel this2;
+    private JScrollPane scrollPane1;
+    private JList restaurants;
+    private JButton edit;
+    private JButton add;
+    private JButton remove;
+    private JButton refresh;
+    private JButton refresh2;
+    private JButton button3;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

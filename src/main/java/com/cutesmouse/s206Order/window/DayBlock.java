@@ -4,41 +4,60 @@
 
 package com.cutesmouse.s206Order.window;
 
+import com.cutesmouse.s206Order.time.TimeStamp;
+import com.cutesmouse.s206Order.utils.DisplayText;
+
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 import javax.swing.*;
 
 /**
  * @author CutesMouse
  */
 public class DayBlock extends JPanel {
-    public DayBlock() {
-
+    private ActionListener e;
+    public DayBlock(TimeStamp time, boolean enabled) {
+        this(time);
+        button9.setEnabled(enabled);
     }
-    public DayBlock(int week, String date) {
-
+    public DayBlock(TimeStamp time) {
         initComponents();
+        dayOfWeek.setText(DisplayText.DAYOFWEEK(time.day));
+        if (time.isToday()) dayOfWeek.setForeground(new Color(170, 148, 0));
+        else dayOfWeek.setForeground(new Color(0, 32, 137));
+        Date.setText(new SimpleDateFormat("yyyy/MM/dd").format(time.toDate()));
+    }
+    public void addClickEvent(ActionListener e) {
+        this.e = e;
+    }
+
+    private void clicked(ActionEvent e) {
+        if (this.e == null) return;
+        this.e.actionPerformed(e);
     }
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-        textField3 = new JTextField();
+        dayOfWeek = new JTextField();
         button9 = new JButton();
-        textField4 = new JTextField();
+        Date = new JTextField();
 
         //======== this ========
-        setPreferredSize(new Dimension(150, 180));
+        setPreferredSize(new Dimension(150, 210));
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        //---- textField3 ----
-        textField3.setText("\u661f\u671f\u65e5");
-        textField3.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
-        textField3.setEditable(false);
-        textField3.setFocusable(false);
-        textField3.setBorder(null);
-        textField3.setHorizontalAlignment(SwingConstants.CENTER);
-        textField3.setMinimumSize(new Dimension(10, 32));
-        textField3.setPreferredSize(new Dimension(20, 30));
-        add(textField3);
+        //---- dayOfWeek ----
+        dayOfWeek.setText("\u661f\u671f\u65e5");
+        dayOfWeek.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
+        dayOfWeek.setEditable(false);
+        dayOfWeek.setFocusable(false);
+        dayOfWeek.setBorder(null);
+        dayOfWeek.setHorizontalAlignment(SwingConstants.CENTER);
+        dayOfWeek.setMinimumSize(new Dimension(10, 32));
+        dayOfWeek.setPreferredSize(new Dimension(20, 30));
+        add(dayOfWeek);
 
         //---- button9 ----
         button9.setPreferredSize(new Dimension(150, 150));
@@ -47,24 +66,25 @@ public class DayBlock extends JPanel {
         button9.setOpaque(false);
         button9.setFocusPainted(false);
         button9.setContentAreaFilled(false);
+        button9.addActionListener(e -> clicked(e));
         add(button9);
 
-        //---- textField4 ----
-        textField4.setText("2020/09/27");
-        textField4.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
-        textField4.setEditable(false);
-        textField4.setFocusable(false);
-        textField4.setBorder(null);
-        textField4.setHorizontalAlignment(SwingConstants.CENTER);
-        textField4.setMinimumSize(new Dimension(10, 32));
-        textField4.setPreferredSize(new Dimension(20, 30));
-        add(textField4);
+        //---- Date ----
+        Date.setText("2020/09/27");
+        Date.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
+        Date.setEditable(false);
+        Date.setFocusable(false);
+        Date.setBorder(null);
+        Date.setHorizontalAlignment(SwingConstants.CENTER);
+        Date.setMinimumSize(new Dimension(10, 32));
+        Date.setPreferredSize(new Dimension(20, 30));
+        add(Date);
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-    private JTextField textField3;
+    private JTextField dayOfWeek;
     private JButton button9;
-    private JTextField textField4;
+    private JTextField Date;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

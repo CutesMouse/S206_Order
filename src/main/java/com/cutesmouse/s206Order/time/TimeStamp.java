@@ -1,6 +1,8 @@
 package com.cutesmouse.s206Order.time;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 import java.util.TimeZone;
 
@@ -15,11 +17,24 @@ public class TimeStamp {
         week = c.get(Calendar.WEEK_OF_MONTH);
         day = c.get(Calendar.DAY_OF_WEEK);
     }
+    public boolean isToday() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+        return format.format(new Date()).equals(format.format(toDate()));
+    }
     public TimeStamp(int year, int month, int weekOfMonth, int dayOfWeek) {
         this.year = year;
         this.month = month;
         this.week = weekOfMonth;
         this.day = dayOfWeek;
+    }
+    public Date toDate() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(0L);
+        cal.set(Calendar.YEAR,year);
+        cal.set(Calendar.MONTH,month);
+        cal.set(Calendar.WEEK_OF_MONTH,week);
+        cal.set(Calendar.DAY_OF_WEEK,day);
+        return new Date(cal.getTimeInMillis());
     }
     public TimeStamp(int month, int weekOfMonth, int dayOfWeek) {
         this(Calendar.getInstance(TimeZone.getDefault()).get(Calendar.YEAR),month,weekOfMonth,dayOfWeek);

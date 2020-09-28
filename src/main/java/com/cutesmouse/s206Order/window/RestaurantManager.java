@@ -19,7 +19,7 @@ import javax.swing.*;
 /**
  * @author CutesMouse
  */
-public class RestaurantManager extends JFrame {
+public class RestaurantManager extends JPanel {
     public RestaurantManager() {
         initComponents();
         restaurants.addListSelectionListener(this::valueChanged);
@@ -87,10 +87,7 @@ public class RestaurantManager extends JFrame {
         refresh2 = new JButton();
 
         //======== this ========
-        setTitle("\u9910\u5ef3\u7de8\u8f2f\u7cfb\u7d71");
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        Container contentPane = getContentPane();
-        contentPane.setLayout(null);
+        setLayout(null);
 
         //======== scrollPane1 ========
         {
@@ -99,7 +96,7 @@ public class RestaurantManager extends JFrame {
             restaurants.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 16));
             scrollPane1.setViewportView(restaurants);
         }
-        contentPane.add(scrollPane1);
+        add(scrollPane1);
         scrollPane1.setBounds(20, 20, 670, 365);
 
         //---- edit ----
@@ -109,7 +106,7 @@ public class RestaurantManager extends JFrame {
         edit.setContentAreaFilled(false);
         edit.setEnabled(false);
         edit.addActionListener(e -> edit(e));
-        contentPane.add(edit);
+        add(edit);
         edit.setBounds(700, 92, 30, 30);
 
         //---- add ----
@@ -121,7 +118,7 @@ public class RestaurantManager extends JFrame {
         add.setContentAreaFilled(false);
         add.setFocusPainted(false);
         add.addActionListener(e -> add(e));
-        contentPane.add(add);
+        add(add);
         add.setBounds(700, 20, 30, 30);
 
         //---- remove ----
@@ -132,7 +129,7 @@ public class RestaurantManager extends JFrame {
         remove.setEnabled(false);
         remove.setFocusPainted(false);
         remove.addActionListener(e -> remove(e));
-        contentPane.add(remove);
+        add(remove);
         remove.setBounds(700, 56, 30, 30);
 
         //---- refresh ----
@@ -142,7 +139,7 @@ public class RestaurantManager extends JFrame {
         refresh.setContentAreaFilled(false);
         refresh.setFocusPainted(false);
         refresh.addActionListener(e -> refresh(e));
-        contentPane.add(refresh);
+        add(refresh);
         refresh.setBounds(700, 128, 30, 30);
 
         //---- refresh2 ----
@@ -152,12 +149,10 @@ public class RestaurantManager extends JFrame {
         refresh2.setContentAreaFilled(false);
         refresh2.setFocusPainted(false);
         refresh2.addActionListener(e -> sort(e));
-        contentPane.add(refresh2);
+        add(refresh2);
         refresh2.setBounds(700, 355, 30, 30);
 
-        contentPane.setPreferredSize(new Dimension(740, 410));
-        pack();
-        setLocationRelativeTo(getOwner());
+        setPreferredSize(new Dimension(740, 410));
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 

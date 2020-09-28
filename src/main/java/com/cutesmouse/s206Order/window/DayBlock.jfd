@@ -7,9 +7,9 @@ new FormModel {
 			"axis": 1
 		} ) {
 			name: "this"
-			"preferredSize": new java.awt.Dimension( 150, 180 )
+			"preferredSize": new java.awt.Dimension( 150, 210 )
 			add( new FormComponent( "javax.swing.JTextField" ) {
-				name: "textField3"
+				name: "dayOfWeek"
 				"text": "星期日"
 				"font": &Font0 new java.awt.Font( "微軟正黑體", 0, 20 )
 				"editable": false
@@ -27,9 +27,10 @@ new FormModel {
 				"opaque": false
 				"focusPainted": false
 				"contentAreaFilled": false
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "clicked", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JTextField" ) {
-				name: "textField4"
+				name: "Date"
 				"text": "2020/09/27"
 				"font": #Font0
 				"editable": false
@@ -41,7 +42,7 @@ new FormModel {
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 195, 300 )
+			"size": new java.awt.Dimension( 195, 255 )
 		} )
 	}
 }
