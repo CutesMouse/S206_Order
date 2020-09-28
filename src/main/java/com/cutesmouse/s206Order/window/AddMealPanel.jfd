@@ -1,0 +1,54 @@
+JFDML JFormDesigner: "7.0.2.0.298" Java: "11.0.6" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
+			name: "this"
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "textField1"
+				"text": "餐點名稱:"
+				"font": &Font0 new java.awt.Font( "微軟正黑體", 0, 16 )
+				"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+				"editable": false
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 0
+				"y": 5
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "textField2"
+				"text": "價格:"
+				"font": #Font0
+				"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+				"editable": false
+				"horizontalAlignment": 0
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 77
+				"height": 27
+				"x": 0
+				"y": 45
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "mealName"
+				"font": &Font1 new java.awt.Font( "Microsoft JhengHei UI", 0, 16 )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 95
+				"y": 5
+				"width": 215
+				"height": 27
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "mealPrice"
+				"font": #Font1
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 215
+				"height": 27
+				"x": 95
+				"y": 45
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 325, 80 )
+		} )
+	}
+}

@@ -1,0 +1,75 @@
+JFDML JFormDesigner: "7.0.2.0.298" Java: "11.0.6" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) {
+			"autoSize": false
+		} ) {
+			name: "this"
+			"defaultCloseOperation": 0
+			"background": new java.awt.Color( 153, 255, 153, 255 )
+			"title": "S206 夜輔點餐系統"
+			"modalExclusionType": enum java.awt.Dialog$ModalExclusionType TOOLKIT_EXCLUDE
+			addEvent( new FormEvent( "java.awt.event.WindowListener", "windowClosing", "WindowClosing", true ) )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "date"
+				"foreground": new java.awt.Color( 0, 0, 0, 255 )
+				"font": new java.awt.Font( "微軟正黑體", 1, 22 )
+				"editable": false
+				"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+				"focusable": false
+				"requestFocusEnabled": false
+				"text": "xxxx年xx月xx日 第x週 星期x"
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 0
+				"y": -35
+				"width": 400
+				"height": 100
+			} )
+			menuBar: new FormContainer( "javax.swing.JMenuBar", new FormLayoutManager( class javax.swing.JMenuBar ) ) {
+				name: "menuBar1"
+				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+					name: "files"
+					"text": " 檔案(F)"
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "output"
+						"text": "匯出本週資料"
+					} )
+				} )
+				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+					name: "rest"
+					"text": " 餐廳(R) "
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "editRest"
+						"text": "編輯餐廳"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "editRestaurants", true ) )
+					} )
+				} )
+				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+					name: "stu"
+					"text": " 學生(S) "
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItem1"
+						"text": "編輯學生"
+					} )
+				} )
+				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+					name: "order"
+					"text": " 點餐(O) "
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItem2"
+						"text": "開啟點餐視窗"
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItem3"
+						"text": "指定內容"
+					} )
+				} )
+			}
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 1135, 640 )
+		} )
+	}
+}

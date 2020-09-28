@@ -1,0 +1,119 @@
+JFDML JFormDesigner: "7.0.2.0.298" Java: "11.0.6" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
+			name: "this"
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
+				name: "panel3"
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
+					name: "panel1"
+					add( new FormComponent( "javax.swing.JComboBox" ) {
+						name: "years"
+						"font": &Font0 new java.awt.Font( "微軟正黑體", 0, 16 )
+						addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "reload", true ) )
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+						"width": 130
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "date"
+						"foreground": &Color0 new java.awt.Color( 0, 0, 0, 255 )
+						"font": &Font1 new java.awt.Font( "微軟正黑體", 1, 22 )
+						"editable": false
+						"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+						"focusable": false
+						"requestFocusEnabled": false
+						"text": "年"
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+						"width": 35
+						"height": 33
+						"x": 135
+						"y": 0
+					} )
+				}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
+					name: "panel2"
+					add( new FormComponent( "javax.swing.JComboBox" ) {
+						name: "months"
+						"font": #Font0
+						addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "reload", true ) )
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+						"width": 130
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "date2"
+						"foreground": #Color0
+						"font": #Font1
+						"editable": false
+						"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+						"focusable": false
+						"requestFocusEnabled": false
+						"text": "月"
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+						"width": 35
+						"height": 33
+						"x": 135
+						"y": 0
+					} )
+				}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+					"width": 165
+					"height": 33
+					"x": 170
+				} )
+				add( new FormComponent( "javax.swing.JComboBox" ) {
+					name: "weekOfMonth"
+					"font": #Font0
+					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "LoadDay", true ) )
+				}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+					"width": 130
+					"x": 345
+					"height": 33
+				} )
+				add( new FormComponent( "javax.swing.JComboBox" ) {
+					name: "dayOfWeek"
+					"font": #Font0
+				}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+					"width": 130
+					"height": 33
+					"x": 485
+					"y": 0
+				} )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 35
+				"y": 0
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "button1"
+				"opaque": false
+				"contentAreaFilled": false
+				"borderPainted": false
+				"focusPainted": false
+				"icon": new com.jformdesigner.model.SwingIcon( 0, "/today.png" )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "setToday", true ) )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 30
+				"height": 30
+				"x": 0
+				"y": 0
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "button2"
+				"opaque": false
+				"contentAreaFilled": false
+				"borderPainted": false
+				"focusPainted": false
+				"icon": new com.jformdesigner.model.SwingIcon( 0, "/send.png" )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "submit", true ) )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 30
+				"height": 30
+				"x": 655
+				"y": 0
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 155, 80 )
+			"size": new java.awt.Dimension( 690, 35 )
+		} )
+	}
+}

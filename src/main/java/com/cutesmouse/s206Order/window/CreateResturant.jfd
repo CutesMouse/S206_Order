@@ -1,0 +1,136 @@
+JFDML JFormDesigner: "7.0.2.0.298" Java: "11.0.6" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) {
+			"autoSize": false
+		} ) {
+			name: "this"
+			"title": "建立餐廳"
+			"resizable": false
+			"defaultCloseOperation": 2
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "textField1"
+				"text": "*餐廳名稱"
+				"font": &Font0 new java.awt.Font( "Microsoft JhengHei UI", 0, 16 )
+				"editable": false
+				"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 30
+				"y": 25
+				"height": 33
+				"width": 90
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "textField2"
+				"text": "餐廳電話"
+				"font": #Font0
+				"editable": false
+				"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 85
+				"height": 33
+				"x": 35
+				"y": 80
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "name"
+				"font": &Font1 new java.awt.Font( "微軟正黑體", 0, 16 )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 130
+				"y": 25
+				"width": 490
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "tel"
+				"font": #Font1
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 490
+				"height": 33
+				"x": 130
+				"y": 80
+			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane1"
+				add( new FormComponent( "javax.swing.JList" ) {
+					name: "meals"
+					"font": new java.awt.Font( "微軟正黑體", 0, 16 )
+				} )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 35
+				"y": 140
+				"width": 550
+				"height": 155
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "button1"
+				"text": "確認"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "build", true ) )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 485
+				"y": 305
+				"width": 70
+				"height": 30
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "button2"
+				"text": "取消"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "destroy", true ) )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 70
+				"height": 30
+				"x": 560
+				"y": 305
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "add"
+				"foreground": new java.awt.Color( 0, 153, 0, 255 )
+				"icon": new com.jformdesigner.model.SwingIcon( 0, "/add.png" )
+				"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+				"opaque": false
+				"borderPainted": false
+				"contentAreaFilled": false
+				"focusPainted": false
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "add", true ) )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 590
+				"y": 140
+				"width": 30
+				"height": 30
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "remove"
+				"foreground": &Color0 new java.awt.Color( 255, 0, 0, 255 )
+				"icon": new com.jformdesigner.model.SwingIcon( 0, "/minus.png" )
+				"borderPainted": false
+				"contentAreaFilled": false
+				"enabled": false
+				"focusPainted": false
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "removeMeals", true ) )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 30
+				"height": 30
+				"x": 590
+				"y": 175
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "refresh"
+				"foreground": #Color0
+				"icon": new com.jformdesigner.model.SwingIcon( 0, "/refresh.png" )
+				"borderPainted": false
+				"contentAreaFilled": false
+				"focusPainted": false
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "refresh", true ) )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 30
+				"height": 30
+				"x": 590
+				"y": 210
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 675, 360 )
+		} )
+	}
+}
