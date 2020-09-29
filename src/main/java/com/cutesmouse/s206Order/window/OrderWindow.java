@@ -25,12 +25,18 @@ import javax.swing.event.ListSelectionEvent;
 public class OrderWindow extends JFrame {
     private int weekOffset;
     public OrderWindow() {
+        DayBlock.MainWINDOW = this;
         initComponents();
-        OrderPicker.addSubmitListener(this::orderPicker);
         weekOffset = Calendar.getInstance(TimeZone.getDefault()).get(Calendar.WEEK_OF_MONTH);
         loadNest();
         restaurants.addListSelectionListener(this::valueChanged);
         refresh(null);
+    }
+    public void triggered(DayBlock block) {
+        for (Component c : daysNest.getComponents()) {
+            c.setBackground(null);
+        }
+        block.setBackground(new Color(255, 71, 35));
     }
     private void loadNest() {
         daysNest.removeAll();
@@ -45,7 +51,6 @@ public class OrderWindow extends JFrame {
         int from = 1;
         int end = 7;
         if (week == 1) {
-            System.out.println(cal.get(Calendar.DAY_OF_MONTH));
             from = cal.get(Calendar.DAY_OF_WEEK);
             end = 7;
         }
@@ -69,9 +74,6 @@ public class OrderWindow extends JFrame {
             }
         }
         daysNest.updateUI();
-    }
-    public void orderPicker(ActionEvent e) {
-        System.out.println(OrderPicker.getTimeStamp());
     }
 
     private void next_week(ActionEvent e) {
@@ -150,7 +152,6 @@ public class OrderWindow extends JFrame {
         tabbedPane1 = new JTabbedPane();
         Order = new JScrollPane();
         panel1 = new JPanel();
-        OrderPicker = new TimeStampPicker();
         querySingle = new JScrollPane();
         queryAll = new JScrollPane();
         panel4 = new JPanel();
@@ -194,7 +195,6 @@ public class OrderWindow extends JFrame {
                 //======== panel1 ========
                 {
                     panel1.setLayout(new FlowLayout());
-                    panel1.add(OrderPicker);
                 }
                 Order.setViewportView(panel1);
             }
@@ -370,7 +370,6 @@ public class OrderWindow extends JFrame {
     private JTabbedPane tabbedPane1;
     private JScrollPane Order;
     private JPanel panel1;
-    private TimeStampPicker OrderPicker;
     private JScrollPane querySingle;
     private JScrollPane queryAll;
     private JPanel panel4;

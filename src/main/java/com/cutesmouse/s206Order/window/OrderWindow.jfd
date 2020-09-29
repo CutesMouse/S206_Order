@@ -16,9 +16,6 @@ new FormModel {
 					name: "Order"
 					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) ) {
 						name: "panel1"
-						add( new FormComponent( "com.cutesmouse.s206Order.window.TimeStampPicker" ) {
-							name: "OrderPicker"
-						} )
 					} )
 				}, new FormLayoutConstraints( null ) {
 					"title": "點餐"

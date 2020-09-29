@@ -18,12 +18,16 @@ import javax.swing.*;
  */
 public class DayBlock extends JPanel {
     private ActionListener e;
+    public static OrderWindow MainWINDOW;
     public DayBlock(TimeStamp time, boolean enabled) {
         this(time);
-        button9.setEnabled(enabled);
+        blank.setEnabled(enabled);
     }
     public DayBlock(TimeStamp time) {
         initComponents();
+        if (time.toDate().getTime() < System.currentTimeMillis() && !time.isToday()) {
+            this.blank.setIcon(new ImageIcon(getClass().getResource("/blank.png")));
+        }
         dayOfWeek.setText(DisplayText.DAYOFWEEK(time.day));
         if (time.isToday()) dayOfWeek.setForeground(new Color(170, 148, 0));
         else dayOfWeek.setForeground(new Color(0, 32, 137));
@@ -34,6 +38,9 @@ public class DayBlock extends JPanel {
     }
 
     private void clicked(ActionEvent e) {
+        if (MainWINDOW != null) {
+            MainWINDOW.triggered(this);
+        }
         if (this.e == null) return;
         this.e.actionPerformed(e);
     }
@@ -41,11 +48,12 @@ public class DayBlock extends JPanel {
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         dayOfWeek = new JTextField();
-        button9 = new JButton();
+        blank = new JButton();
         Date = new JTextField();
 
         //======== this ========
-        setPreferredSize(new Dimension(150, 210));
+        setPreferredSize(new Dimension(154, 210));
+        setBackground(null);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         //---- dayOfWeek ----
@@ -57,17 +65,19 @@ public class DayBlock extends JPanel {
         dayOfWeek.setHorizontalAlignment(SwingConstants.CENTER);
         dayOfWeek.setMinimumSize(new Dimension(10, 32));
         dayOfWeek.setPreferredSize(new Dimension(20, 30));
+        dayOfWeek.setOpaque(false);
         add(dayOfWeek);
 
-        //---- button9 ----
-        button9.setPreferredSize(new Dimension(150, 150));
-        button9.setIcon(new ImageIcon(getClass().getResource("/blank.png")));
-        button9.setBorderPainted(false);
-        button9.setOpaque(false);
-        button9.setFocusPainted(false);
-        button9.setContentAreaFilled(false);
-        button9.addActionListener(e -> clicked(e));
-        add(button9);
+        //---- blank ----
+        blank.setPreferredSize(new Dimension(150, 150));
+        blank.setIcon(new ImageIcon(getClass().getResource("/blank_white.png")));
+        blank.setBorderPainted(false);
+        blank.setOpaque(false);
+        blank.setFocusPainted(false);
+        blank.setContentAreaFilled(false);
+        blank.setAlignmentX(0.5F);
+        blank.addActionListener(e -> clicked(e));
+        add(blank);
 
         //---- Date ----
         Date.setText("2020/09/27");
@@ -78,13 +88,14 @@ public class DayBlock extends JPanel {
         Date.setHorizontalAlignment(SwingConstants.CENTER);
         Date.setMinimumSize(new Dimension(10, 32));
         Date.setPreferredSize(new Dimension(20, 30));
+        Date.setOpaque(false);
         add(Date);
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     private JTextField dayOfWeek;
-    private JButton button9;
+    private JButton blank;
     private JTextField Date;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }
