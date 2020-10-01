@@ -21,7 +21,7 @@ public class Main {
         loadRestaurants();
         loadStudents();
         loadFormInfo();
-        debug();
+        //debug();
         new OrderWindow().setVisible(true);
     }
     private static void debug() {
