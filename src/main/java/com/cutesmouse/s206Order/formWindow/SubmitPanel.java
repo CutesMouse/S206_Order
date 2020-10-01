@@ -19,6 +19,7 @@ import javax.swing.*;
 public class SubmitPanel extends JScrollPane {
     public SubmitPanel(ArrayList<MealData> mds) {
         initComponents();
+        mds.sort(Comparator.comparingLong(p -> p.getTime().toDate().getTime()));
         for (MealData md : mds) {
             c.add(new SingleSubmit(md));
         }

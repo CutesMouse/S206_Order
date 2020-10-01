@@ -58,11 +58,10 @@ public class TimeStamp implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TimeStamp timeStamp = (TimeStamp) o;
-        return year == timeStamp.year &&
-                month == timeStamp.month &&
-                week == timeStamp.week &&
-                day == timeStamp.day;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+        String s1 = format.format(toDate());
+        String s2 = format.format(((TimeStamp) o).toDate());
+        return s1.equals(s2);
     }
 
     @Override

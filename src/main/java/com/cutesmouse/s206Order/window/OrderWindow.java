@@ -109,15 +109,18 @@ public class OrderWindow extends JFrame {
         }
         if (from > 1) {
             for (int i = 1; i < from; i++) {
-                daysNest.add(new DayBlock(new TimeStamp(year, month, week, i), true));
+                DayBlock add = new DayBlock(new TimeStamp(year, month, week, i), true);
+                daysNest.add(add);
             }
         }
         for (int i = from; i <= end; i++) {
-            daysNest.add(new DayBlock(new TimeStamp(year, month, week, i)));
+            DayBlock add = new DayBlock(new TimeStamp(year, month, week, i));
+            daysNest.add(add);
         }
         if (end != 7) {
             for (int i = end + 1; i <= 7; i++) {
-                daysNest.add(new DayBlock(new TimeStamp(year, month, week, i), true));
+                DayBlock add = new DayBlock(new TimeStamp(year, month, week, i), true);
+                daysNest.add(add);
             }
         }
         daysNest.updateUI();
@@ -200,7 +203,13 @@ public class OrderWindow extends JFrame {
         SELECTED.getForm().setToggled(!SELECTED.getForm().isToggled());
         DayBlock ds = SELECTED;
         loadNest();
-        triggered(ds);
+        for (Component c : daysNest.getComponents()) {
+            if (!(c instanceof DayBlock)) return;
+            if (c.equals(ds)) {
+                triggered(((DayBlock) c));
+                break;
+            }
+        }
         loadButton();
         loadOrderPanel();
     }
@@ -219,7 +228,14 @@ public class OrderWindow extends JFrame {
         SELECTED.getForm().appendRestaurant(r);
         DayBlock ds = SELECTED;
         loadNest();
-        triggered(ds);
+        for (Component c : daysNest.getComponents()) {
+            if (!(c instanceof DayBlock)) return;
+            if (c.equals(ds)) {
+                triggered(((DayBlock) c));
+                break;
+            }
+        }
+        loadOrderPanel();
         loadButton();
     }
     public ArrayList<MealData> getMealDatas() {
@@ -257,6 +273,9 @@ public class OrderWindow extends JFrame {
             }
             JOptionPane.showMessageDialog(this,"已收到您的訂單! 如後續要確認請至學生查詢\n記得繳交表定金額("
                     +meals.stream().mapToInt(MealData::getPrice).sum()+"$)給相關訂餐同學");
+            loadOrderPanel();
+            sid.setText("");
+            nid.setText("");
         }
     }
 
@@ -264,6 +283,7 @@ public class OrderWindow extends JFrame {
         if (SELECTED == null) return;
         if (!SELECTED.hasRestaurant()) return;
         JOptionPane.showMessageDialog(this,new ShowRestaurant(SELECTED.getForm()),"檢視餐廳",JOptionPane.PLAIN_MESSAGE);
+        loadOrderPanel();
     }
 
     private void ViewData(ActionEvent e) {

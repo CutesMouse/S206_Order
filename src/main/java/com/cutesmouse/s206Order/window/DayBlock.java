@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * @author CutesMouse
@@ -45,11 +46,25 @@ public class DayBlock extends JPanel {
 
     public DayBlock(TimeStamp time, boolean enabled) {
         this(time);
-        blank.setEnabled(enabled);
+        //blank.setEnabled(enabled);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DayBlock dayBlock = (DayBlock) o;
+        return dayBlock.time.equals(time);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(e, time, FORM, dayOfWeek, blank, Date, Status);
+    }
+
     public DayBlock(TimeStamp time) {
         this.time = time;
-        if (FormInfo.FORM_INFOS.containsKey(time)) FORM = FormInfo.FORM_INFOS.get(time);
+        FORM = FormInfo.FORM_INFOS.keySet().stream().filter(p -> p.equals(time)).map(p -> FormInfo.FORM_INFOS.get(p)).findFirst().orElse(null);
         initComponents();
         dayOfWeek.setText(DisplayText.DAYOFWEEK(time.day));
         dayOfWeek.setForeground(new Color(0, 32, 137));
