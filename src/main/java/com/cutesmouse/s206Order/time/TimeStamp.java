@@ -1,12 +1,13 @@
 package com.cutesmouse.s206Order.time;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 import java.util.TimeZone;
 
-public class TimeStamp {
+public class TimeStamp implements Serializable {
     public final int year; //xxxx年
     public final int month; //x月
     public final int week; //第x週

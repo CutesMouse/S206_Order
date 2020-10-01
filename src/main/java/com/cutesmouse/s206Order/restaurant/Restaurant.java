@@ -1,11 +1,24 @@
 package com.cutesmouse.s206Order.restaurant;
 
+import com.cutesmouse.s206Order.form.FormInfo;
+import com.cutesmouse.s206Order.time.TimeStamp;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Restaurant implements Serializable {
     public static List<Restaurant> RESTAURANTS;
+    public static void removeRestaurant(Restaurant r) {
+        RESTAURANTS.remove(r);
+        ArrayList<TimeStamp> tps = new ArrayList<>(FormInfo.FORM_INFOS.keySet());
+        for (TimeStamp tp : tps) {
+            FormInfo info = FormInfo.FORM_INFOS.get(tp);
+            info.removeRestaurant(r);
+            if (info.getRestaurants().size() == 0) FormInfo.FORM_INFOS.remove(tp);
+        }
+    }
     public static void register(Restaurant r) {
         RESTAURANTS.add(r);
     }

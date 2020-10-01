@@ -7,10 +7,16 @@ package com.cutesmouse.s206Order.window;
 import java.awt.event.*;
 
 import com.cutesmouse.s206Order.Main;
+import com.cutesmouse.s206Order.form.FormInfo;
+import com.cutesmouse.s206Order.form.FormManager;
+import com.cutesmouse.s206Order.form.MealData;
+import com.cutesmouse.s206Order.formWindow.FormPanel;
 import com.cutesmouse.s206Order.restaurant.Restaurant;
 import com.cutesmouse.s206Order.restaurant.RestaurantBuilder;
 import com.cutesmouse.s206Order.time.TimeStamp;
+import com.cutesmouse.s206Order.utils.DayOrderedManager;
 import com.cutesmouse.s206Order.utils.DisplayText;
+import com.cutesmouse.s206Order.utils.ValueSearch;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -24,29 +30,64 @@ import javax.swing.event.ListSelectionEvent;
  */
 public class OrderWindow extends JFrame {
     private int weekOffset;
+    private DayBlock SELECTED;
     public OrderWindow() {
         DayBlock.MainWINDOW = this;
         initComponents();
+        //OrderPanel.add(new FormPanel());
         weekOffset = Calendar.getInstance(TimeZone.getDefault()).get(Calendar.WEEK_OF_MONTH);
         loadNest();
         restaurants.addListSelectionListener(this::valueChanged);
         refresh(null);
+        loadOrderPanel();
+        scrollPane2.getVerticalScrollBar().setUnitIncrement(10);
     }
     public void triggered(DayBlock block) {
+        /*
+        getData.setEnabled(b);
+        setRestaurant.setEnabled(b);
+        status.setEnabled(b);
+        restaurantList.setEnabled(b);
+         */
         for (Component c : daysNest.getComponents()) {
             c.setBackground(null);
         }
-        block.setBackground(new Color(255, 71, 35));
+        SELECTED = block;
+        loadButton();
+        block.setBackground(new Color(180, 255, 156));
+    }
+    private void loadButton() {
+        DayBlock block = SELECTED;
+        if (block == null) return;
+        restaurantList.setEnabled(block.hasRestaurant());
+        getData.setEnabled(block.hasData());
+        status.setIcon(new ImageIcon(getClass().getResource("/toggleFill_"+ (block.avaliableToFill() ? "On" : "Off") + ".png")));
+        if (block.getTimestamp().toDate().getTime() < System.currentTimeMillis() && !block.getTimestamp().isToday()) {
+            setRestaurant.setEnabled(false);
+            status.setEnabled(false);
+        } else {
+            setRestaurant.setEnabled(true);
+            status.setEnabled(block.hasRestaurant());
+        }
+
+        getData.setEnabled(SELECTED.hasData());
+    }
+    private void setButtonStatus(boolean b) {
+        getData.setEnabled(b);
+        setRestaurant.setEnabled(b);
+        status.setEnabled(b);
+        restaurantList.setEnabled(b);
     }
     private void loadNest() {
         daysNest.removeAll();
+        SELECTED = null;
+        setButtonStatus(false);
         Calendar cal = Calendar.getInstance(TimeZone.getDefault());
         int week = weekOffset;
         cal.set(Calendar.WEEK_OF_MONTH, week);
         week = cal.get(Calendar.WEEK_OF_MONTH);
         int year = cal.get(Calendar.YEAR);
         int month = cal.get(Calendar.MONTH);
-
 
         int from = 1;
         int end = 7;
@@ -75,7 +116,13 @@ public class OrderWindow extends JFrame {
         }
         daysNest.updateUI();
     }
-
+    private void loadOrderPanel() {
+        forms.removeAll();
+        for (FormPanel m : FormManager.getPanels()) {
+            forms.add(m);
+        }
+        forms.updateUI();
+    }
     private void next_week(ActionEvent e) {
         weekOffset++;
         loadNest();
@@ -103,7 +150,7 @@ public class OrderWindow extends JFrame {
             edit.setEnabled(false);
             return;
         }
-        Restaurant.RESTAURANTS.remove(o);
+        Restaurant.removeRestaurant(((Restaurant) o));
         refresh(e);
     }
 
@@ -135,34 +182,100 @@ public class OrderWindow extends JFrame {
         remove.setEnabled(false);
         edit.setEnabled(false);
     }
-
     private void setToday(ActionEvent e) {
         weekOffset = Calendar.getInstance(TimeZone.getDefault()).get(Calendar.WEEK_OF_MONTH);
         loadNest();
+        for (Component cp : daysNest.getComponents()) {
+            if (!(cp instanceof DayBlock)) continue;
+            if (((DayBlock) cp).getTimestamp().isToday()) triggered(((DayBlock) cp));
+        }
     }
-
     private void thisWindowClosing(WindowEvent e) {
         Main.end();
         dispose();
         System.exit(0);
     }
+    private void ToggleStatus(ActionEvent e) {
+        if (SELECTED == null) return;
+        if (SELECTED.getForm().getRestaurants().size() == 0) return;
+        SELECTED.getForm().setToggled(!SELECTED.getForm().isToggled());
+        DayBlock ds = SELECTED;
+        loadNest();
+        triggered(ds);
+        loadButton();
+        loadOrderPanel();
+    }
+
+    private void AddRestaurantToForm(ActionEvent e) {
+        if (SELECTED == null) return;
+        Object o = restaurants.getSelectedValue();
+        if (!(o instanceof Restaurant)) {
+            JOptionPane.showMessageDialog(this,"你沒有選擇任何餐廳!","錯誤",JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        Restaurant r = ((Restaurant) o);
+        if (SELECTED.getForm().getRestaurants().contains(r)) {
+            JOptionPane.showMessageDialog(this,"這個項目已經存在!","錯誤",JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        SELECTED.getForm().appendRestaurant(r);
+        DayBlock ds = SELECTED;
+        loadNest();
+        triggered(ds);
+        loadButton();
+    }
+
+    public ArrayList<MealData> getMealDatas() {
+        ArrayList<MealData> mds = new ArrayList<>();
+        for (Component c : forms.getComponents()) {
+            if (!(c instanceof FormPanel)) continue;
+            FormPanel fp = ((FormPanel) c);
+            mds.addAll(fp.getMealDatas());
+        }
+        return mds;
+    }
+
+    private void submit(ActionEvent e) {
+        if (sid.getText().isEmpty() || !sid.getText().matches("\\d+")) {
+            JOptionPane.showMessageDialog(this,"請輸入學號!","錯誤",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (nid.getText().isEmpty() || !nid.getText().matches("\\d+")) {
+            JOptionPane.showMessageDialog(this,"請輸入座號!","錯誤",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        MealData data = ValueSearch.search(getMealDatas(), p -> p.getAmount() <= 0);
+        if (data != null) {
+            JOptionPane.showMessageDialog(this,"點餐的數量出現非數字字元","錯誤",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+    }
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         tabbedPane1 = new JTabbedPane();
-        Order = new JScrollPane();
-        panel1 = new JPanel();
+        OrderPanel = new JPanel();
+        des_formInfo4 = new JTextField();
+        des_formInfo2 = new JTextField();
+        nid = new JTextField();
+        des_formInfo3 = new JTextField();
+        sid = new JTextField();
+        scrollPane2 = new JScrollPane();
+        forms = new JPanel();
+        button1 = new JButton();
         querySingle = new JScrollPane();
         queryAll = new JScrollPane();
         panel4 = new JPanel();
         timeStampPicker1 = new TimeStampPicker();
         settings = new JScrollPane();
-        panel2 = new JPanel();
-        textField1 = new JTextField();
+        settingPanel = new JPanel();
+        des_formInfo = new JTextField();
         daysNest = new JPanel();
-        button1 = new JButton();
-        button2 = new JButton();
-        this2 = new JPanel();
+        nextPage = new JButton();
+        lastPage = new JButton();
+        Today = new JButton();
+        restaurantPanel = new JPanel();
         scrollPane1 = new JScrollPane();
         restaurants = new JList();
         edit = new JButton();
@@ -170,7 +283,10 @@ public class OrderWindow extends JFrame {
         remove = new JButton();
         refresh = new JButton();
         refresh2 = new JButton();
-        button3 = new JButton();
+        restaurantList = new JButton();
+        getData = new JButton();
+        status = new JButton();
+        setRestaurant = new JButton();
 
         //======== this ========
         setTitle("\u9ede\u9910\u4ecb\u9762");
@@ -189,16 +305,93 @@ public class OrderWindow extends JFrame {
         {
             tabbedPane1.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 18));
 
-            //======== Order ========
+            //======== OrderPanel ========
             {
+                OrderPanel.setLayout(null);
 
-                //======== panel1 ========
+                //---- des_formInfo4 ----
+                des_formInfo4.setText("\u5fb7\u5149\u4e2d\u5b78 S206 \u9ede\u9910\u7cfb\u7d71");
+                des_formInfo4.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
+                des_formInfo4.setEditable(false);
+                des_formInfo4.setFocusable(false);
+                des_formInfo4.setBorder(null);
+                des_formInfo4.setAutoscrolls(false);
+                des_formInfo4.setHorizontalAlignment(SwingConstants.CENTER);
+                des_formInfo4.setPreferredSize(new Dimension(230, 20));
+                OrderPanel.add(des_formInfo4);
+                des_formInfo4.setBounds(0, 0, 1168, 50);
+
+                //---- des_formInfo2 ----
+                des_formInfo2.setText("\u5ea7\u865f: ");
+                des_formInfo2.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
+                des_formInfo2.setEditable(false);
+                des_formInfo2.setFocusable(false);
+                des_formInfo2.setBorder(null);
+                des_formInfo2.setAutoscrolls(false);
+                OrderPanel.add(des_formInfo2);
+                des_formInfo2.setBounds(415, 60, 65, 30);
+
+                //---- nid ----
+                nid.setPreferredSize(new Dimension(100, 30));
+                nid.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 16));
+                OrderPanel.add(nid);
+                nid.setBounds(485, 60, 100, 30);
+
+                //---- des_formInfo3 ----
+                des_formInfo3.setText("\u5b78\u865f: ");
+                des_formInfo3.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
+                des_formInfo3.setEditable(false);
+                des_formInfo3.setFocusable(false);
+                des_formInfo3.setBorder(null);
+                des_formInfo3.setAutoscrolls(false);
+                OrderPanel.add(des_formInfo3);
+                des_formInfo3.setBounds(605, 60, 60, 30);
+
+                //---- sid ----
+                sid.setPreferredSize(new Dimension(100, 30));
+                sid.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 16));
+                OrderPanel.add(sid);
+                sid.setBounds(670, 60, 100, 30);
+
+                //======== scrollPane2 ========
                 {
-                    panel1.setLayout(new FlowLayout());
+                    scrollPane2.setBorder(null);
+
+                    //======== forms ========
+                    {
+                        forms.setLayout(new BoxLayout(forms, BoxLayout.Y_AXIS));
+                    }
+                    scrollPane2.setViewportView(forms);
                 }
-                Order.setViewportView(panel1);
+                OrderPanel.add(scrollPane2);
+                scrollPane2.setBounds(0, 110, 1165, 520);
+
+                //---- button1 ----
+                button1.setIcon(new ImageIcon(getClass().getResource("/submit.png")));
+                button1.setOpaque(false);
+                button1.setBorderPainted(false);
+                button1.setFocusPainted(false);
+                button1.setContentAreaFilled(false);
+                button1.addActionListener(e -> submit(e));
+                OrderPanel.add(button1);
+                button1.setBounds(1070, 60, 82, 30);
+
+                {
+                    // compute preferred size
+                    Dimension preferredSize = new Dimension();
+                    for(int i = 0; i < OrderPanel.getComponentCount(); i++) {
+                        Rectangle bounds = OrderPanel.getComponent(i).getBounds();
+                        preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
+                        preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
+                    }
+                    Insets insets = OrderPanel.getInsets();
+                    preferredSize.width += insets.right;
+                    preferredSize.height += insets.bottom;
+                    OrderPanel.setMinimumSize(preferredSize);
+                    OrderPanel.setPreferredSize(preferredSize);
+                }
             }
-            tabbedPane1.addTab("\u9ede\u9910", Order);
+            tabbedPane1.addTab("\u9ede\u9910", OrderPanel);
             tabbedPane1.addTab("\u500b\u4eba\u67e5\u8a62", querySingle);
 
             //======== queryAll ========
@@ -206,7 +399,7 @@ public class OrderWindow extends JFrame {
 
                 //======== panel4 ========
                 {
-                    panel4.setLayout(new FlowLayout());
+                    panel4.setLayout(new BoxLayout(panel4, BoxLayout.Y_AXIS));
                     panel4.add(timeStampPicker1);
                 }
                 queryAll.setViewportView(panel4);
@@ -216,52 +409,63 @@ public class OrderWindow extends JFrame {
             //======== settings ========
             {
 
-                //======== panel2 ========
+                //======== settingPanel ========
                 {
-                    panel2.setLayout(null);
+                    settingPanel.setLayout(null);
 
-                    //---- textField1 ----
-                    textField1.setText("\u8868\u55ae\u5167\u5bb9");
-                    textField1.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
-                    textField1.setEditable(false);
-                    textField1.setFocusable(false);
-                    textField1.setBorder(null);
-                    panel2.add(textField1);
-                    textField1.setBounds(25, 30, 105, 40);
+                    //---- des_formInfo ----
+                    des_formInfo.setText("\u8868\u55ae\u5167\u5bb9");
+                    des_formInfo.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
+                    des_formInfo.setEditable(false);
+                    des_formInfo.setFocusable(false);
+                    des_formInfo.setBorder(null);
+                    settingPanel.add(des_formInfo);
+                    des_formInfo.setBounds(25, 30, 105, 40);
 
                     //======== daysNest ========
                     {
-                        daysNest.setPreferredSize(new Dimension(10, 210));
+                        daysNest.setPreferredSize(new Dimension(10, 243));
                         daysNest.setLayout(new FlowLayout());
                     }
-                    panel2.add(daysNest);
+                    settingPanel.add(daysNest);
                     daysNest.setBounds(25, 70, 1135, 235);
 
-                    //---- button1 ----
-                    button1.setIcon(new ImageIcon(getClass().getResource("/left_next.png")));
-                    button1.setBorder(null);
-                    button1.setOpaque(false);
-                    button1.setBorderPainted(false);
-                    button1.setFocusPainted(false);
-                    button1.setContentAreaFilled(false);
-                    button1.addActionListener(e -> next_week(e));
-                    panel2.add(button1);
-                    button1.setBounds(172, 35, 30, 30);
+                    //---- nextPage ----
+                    nextPage.setIcon(new ImageIcon(getClass().getResource("/left_next.png")));
+                    nextPage.setBorder(null);
+                    nextPage.setOpaque(false);
+                    nextPage.setBorderPainted(false);
+                    nextPage.setFocusPainted(false);
+                    nextPage.setContentAreaFilled(false);
+                    nextPage.addActionListener(e -> next_week(e));
+                    settingPanel.add(nextPage);
+                    nextPage.setBounds(172, 35, 30, 30);
 
-                    //---- button2 ----
-                    button2.setIcon(new ImageIcon(getClass().getResource("/last_page.png")));
-                    button2.setBorder(null);
-                    button2.setOpaque(false);
-                    button2.setBorderPainted(false);
-                    button2.setFocusPainted(false);
-                    button2.setContentAreaFilled(false);
-                    button2.addActionListener(e -> last_week(e));
-                    panel2.add(button2);
-                    button2.setBounds(135, 35, 30, 30);
+                    //---- lastPage ----
+                    lastPage.setIcon(new ImageIcon(getClass().getResource("/last_page.png")));
+                    lastPage.setBorder(null);
+                    lastPage.setOpaque(false);
+                    lastPage.setBorderPainted(false);
+                    lastPage.setFocusPainted(false);
+                    lastPage.setContentAreaFilled(false);
+                    lastPage.addActionListener(e -> last_week(e));
+                    settingPanel.add(lastPage);
+                    lastPage.setBounds(135, 35, 30, 30);
 
-                    //======== this2 ========
+                    //---- Today ----
+                    Today.setIcon(new ImageIcon(getClass().getResource("/today.png")));
+                    Today.setBorder(null);
+                    Today.setOpaque(false);
+                    Today.setBorderPainted(false);
+                    Today.setFocusPainted(false);
+                    Today.setContentAreaFilled(false);
+                    Today.addActionListener(e -> setToday(e));
+                    settingPanel.add(Today);
+                    Today.setBounds(209, 35, 30, 30);
+
+                    //======== restaurantPanel ========
                     {
-                        this2.setLayout(null);
+                        restaurantPanel.setLayout(null);
 
                         //======== scrollPane1 ========
                         {
@@ -270,8 +474,8 @@ public class OrderWindow extends JFrame {
                             restaurants.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 16));
                             scrollPane1.setViewportView(restaurants);
                         }
-                        this2.add(scrollPane1);
-                        scrollPane1.setBounds(0, 20, 1080, 255);
+                        restaurantPanel.add(scrollPane1);
+                        scrollPane1.setBounds(0, 20, 1080, 265);
 
                         //---- edit ----
                         edit.setForeground(Color.red);
@@ -280,7 +484,7 @@ public class OrderWindow extends JFrame {
                         edit.setContentAreaFilled(false);
                         edit.setEnabled(false);
                         edit.addActionListener(e -> edit(e));
-                        this2.add(edit);
+                        restaurantPanel.add(edit);
                         edit.setBounds(1090, 95, 30, 30);
 
                         //---- add ----
@@ -292,7 +496,7 @@ public class OrderWindow extends JFrame {
                         add.setContentAreaFilled(false);
                         add.setFocusPainted(false);
                         add.addActionListener(e -> add(e));
-                        this2.add(add);
+                        restaurantPanel.add(add);
                         add.setBounds(1090, 25, 30, 30);
 
                         //---- remove ----
@@ -303,7 +507,7 @@ public class OrderWindow extends JFrame {
                         remove.setEnabled(false);
                         remove.setFocusPainted(false);
                         remove.addActionListener(e -> remove(e));
-                        this2.add(remove);
+                        restaurantPanel.add(remove);
                         remove.setBounds(1090, 60, 30, 30);
 
                         //---- refresh ----
@@ -313,7 +517,7 @@ public class OrderWindow extends JFrame {
                         refresh.setContentAreaFilled(false);
                         refresh.setFocusPainted(false);
                         refresh.addActionListener(e -> refresh(e));
-                        this2.add(refresh);
+                        restaurantPanel.add(refresh);
                         refresh.setBounds(1090, 130, 30, 30);
 
                         //---- refresh2 ----
@@ -323,24 +527,59 @@ public class OrderWindow extends JFrame {
                         refresh2.setContentAreaFilled(false);
                         refresh2.setFocusPainted(false);
                         refresh2.addActionListener(e -> sort(e));
-                        this2.add(refresh2);
+                        restaurantPanel.add(refresh2);
                         refresh2.setBounds(1090, 240, 30, 30);
                     }
-                    panel2.add(this2);
-                    this2.setBounds(25, 330, 1135, 280);
+                    settingPanel.add(restaurantPanel);
+                    restaurantPanel.setBounds(25, 350, 1135, 285);
 
-                    //---- button3 ----
-                    button3.setIcon(new ImageIcon(getClass().getResource("/today.png")));
-                    button3.setBorder(null);
-                    button3.setOpaque(false);
-                    button3.setBorderPainted(false);
-                    button3.setFocusPainted(false);
-                    button3.setContentAreaFilled(false);
-                    button3.addActionListener(e -> setToday(e));
-                    panel2.add(button3);
-                    button3.setBounds(209, 35, 30, 30);
+                    //---- restaurantList ----
+                    restaurantList.setIcon(new ImageIcon(getClass().getResource("/viewRestaurants_On.png")));
+                    restaurantList.setBorder(null);
+                    restaurantList.setOpaque(false);
+                    restaurantList.setBorderPainted(false);
+                    restaurantList.setFocusPainted(false);
+                    restaurantList.setContentAreaFilled(false);
+                    restaurantList.setPreferredSize(new Dimension(100, 30));
+                    settingPanel.add(restaurantList);
+                    restaurantList.setBounds(25, 320, 100, 30);
+
+                    //---- getData ----
+                    getData.setIcon(new ImageIcon(getClass().getResource("/getData_Off.png")));
+                    getData.setBorder(null);
+                    getData.setOpaque(false);
+                    getData.setBorderPainted(false);
+                    getData.setFocusPainted(false);
+                    getData.setContentAreaFilled(false);
+                    getData.setPreferredSize(new Dimension(100, 30));
+                    settingPanel.add(getData);
+                    getData.setBounds(142, 320, 100, 30);
+
+                    //---- status ----
+                    status.setIcon(new ImageIcon(getClass().getResource("/toggleFill_Off.png")));
+                    status.setBorder(null);
+                    status.setOpaque(false);
+                    status.setBorderPainted(false);
+                    status.setFocusPainted(false);
+                    status.setContentAreaFilled(false);
+                    status.setPreferredSize(new Dimension(100, 30));
+                    status.addActionListener(e -> ToggleStatus(e));
+                    settingPanel.add(status);
+                    status.setBounds(1045, 320, 100, 30);
+
+                    //---- setRestaurant ----
+                    setRestaurant.setIcon(new ImageIcon(getClass().getResource("/AddRestaurant.png")));
+                    setRestaurant.setBorder(null);
+                    setRestaurant.setOpaque(false);
+                    setRestaurant.setBorderPainted(false);
+                    setRestaurant.setFocusPainted(false);
+                    setRestaurant.setContentAreaFilled(false);
+                    setRestaurant.setPreferredSize(new Dimension(100, 30));
+                    setRestaurant.addActionListener(e -> AddRestaurantToForm(e));
+                    settingPanel.add(setRestaurant);
+                    setRestaurant.setBounds(259, 320, 166, 30);
                 }
-                settings.setViewportView(panel2);
+                settings.setViewportView(settingPanel);
             }
             tabbedPane1.addTab("\u83dc\u55ae\u8a2d\u5b9a", settings);
         }
@@ -368,19 +607,27 @@ public class OrderWindow extends JFrame {
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     private JTabbedPane tabbedPane1;
-    private JScrollPane Order;
-    private JPanel panel1;
+    private JPanel OrderPanel;
+    private JTextField des_formInfo4;
+    private JTextField des_formInfo2;
+    private JTextField nid;
+    private JTextField des_formInfo3;
+    private JTextField sid;
+    private JScrollPane scrollPane2;
+    private JPanel forms;
+    private JButton button1;
     private JScrollPane querySingle;
     private JScrollPane queryAll;
     private JPanel panel4;
     private TimeStampPicker timeStampPicker1;
     private JScrollPane settings;
-    private JPanel panel2;
-    private JTextField textField1;
+    private JPanel settingPanel;
+    private JTextField des_formInfo;
     private JPanel daysNest;
-    private JButton button1;
-    private JButton button2;
-    private JPanel this2;
+    private JButton nextPage;
+    private JButton lastPage;
+    private JButton Today;
+    private JPanel restaurantPanel;
     private JScrollPane scrollPane1;
     private JList restaurants;
     private JButton edit;
@@ -388,6 +635,9 @@ public class OrderWindow extends JFrame {
     private JButton remove;
     private JButton refresh;
     private JButton refresh2;
-    private JButton button3;
+    private JButton restaurantList;
+    private JButton getData;
+    private JButton status;
+    private JButton setRestaurant;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }
