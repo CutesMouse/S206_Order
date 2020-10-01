@@ -6,6 +6,7 @@ package com.cutesmouse.s206Order.formWindow;
 
 import javax.swing.border.*;
 
+import com.cutesmouse.s206Order.form.FormInfo;
 import com.cutesmouse.s206Order.form.MealData;
 import com.cutesmouse.s206Order.restaurant.Meal;
 import com.cutesmouse.s206Order.restaurant.Restaurant;
@@ -19,13 +20,19 @@ import javax.swing.*;
  */
 public class RestaurantPanel extends JPanel {
     private final Restaurant restaurant;
-    public RestaurantPanel(Restaurant r) {
+    private final FormInfo info;
+    public RestaurantPanel(Restaurant r, FormInfo info) {
+        this.info = info;
         this.restaurant = r;
         initComponents();
         this.name.setText(r.name);
         for (Meal m : r.meals) {
-            this.meals.add(new MealPanel(m));
+            this.meals.add(new MealPanel(m,info));
         }
+    }
+
+    public FormInfo getInfo() {
+        return info;
     }
 
     public ArrayList<MealData> getMealDatas() {

@@ -7,9 +7,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class Restaurant implements Serializable {
     public static List<Restaurant> RESTAURANTS;
+    private final long IDENTIFY;
     public static void removeRestaurant(Restaurant r) {
         RESTAURANTS.remove(r);
         ArrayList<TimeStamp> tps = new ArrayList<>(FormInfo.FORM_INFOS.keySet());
@@ -29,7 +31,21 @@ public class Restaurant implements Serializable {
         this.name = name;
         this.meals = meals;
         this.tel = tel;
+        IDENTIFY = System.currentTimeMillis();
         RESTAURANTS.add(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Restaurant that = (Restaurant) o;
+        return IDENTIFY == that.IDENTIFY;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(IDENTIFY, name, meals, tel);
     }
 
     @Override

@@ -1,0 +1,47 @@
+JFDML JFormDesigner: "7.0.2.0.298" Java: "11.0.6" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
+			name: "this"
+			"preferredSize": new java.awt.Dimension( 590, 300 )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "weekDays"
+				"icon": new com.jformdesigner.model.SwingIcon( 0, "/w_1.png" )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 10
+				"y": 5
+				"width": 30
+				"height": 30
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "item"
+				"text": "點餐內容"
+				"editable": false
+				"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+				"font": &Font0 new java.awt.Font( "微軟正黑體", 0, 16 )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 45
+				"y": 5
+				"width": 485
+				"height": 30
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "price"
+				"text": "100"
+				"editable": false
+				"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+				"font": #Font0
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 55
+				"height": 30
+				"x": 535
+				"y": 5
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 600, 45 )
+		} )
+	}
+}

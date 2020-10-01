@@ -4,40 +4,47 @@
 
 package com.cutesmouse.s206Order.formWindow;
 
+import com.cutesmouse.s206Order.form.MealData;
+import com.cutesmouse.s206Order.utils.DisplayText;
+
 import java.awt.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Comparator;
 import javax.swing.*;
 
 /**
  * @author CutesMouse
  */
-public class SubmitPanel extends JPanel {
-    public SubmitPanel() {
+public class SubmitPanel extends JScrollPane {
+    public SubmitPanel(ArrayList<MealData> mds) {
         initComponents();
+        for (MealData md : mds) {
+            c.add(new SingleSubmit(md));
+        }
+        c.add(new TotalColumn(mds));
     }
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+        c = new JPanel();
 
         //======== this ========
-        setLayout(null);
+        setOpaque(false);
+        setBorder(null);
 
+        //======== c ========
         {
-            // compute preferred size
-            Dimension preferredSize = new Dimension();
-            for(int i = 0; i < getComponentCount(); i++) {
-                Rectangle bounds = getComponent(i).getBounds();
-                preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
-                preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
-            }
-            Insets insets = getInsets();
-            preferredSize.width += insets.right;
-            preferredSize.height += insets.bottom;
-            setMinimumSize(preferredSize);
-            setPreferredSize(preferredSize);
+            c.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 16));
+            c.setBorder(null);
+            c.setFocusable(false);
+            c.setLayout(new BoxLayout(c, BoxLayout.Y_AXIS));
         }
+        setViewportView(c);
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+    private JPanel c;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

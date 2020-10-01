@@ -18,7 +18,11 @@ public class TimeStamp implements Serializable {
         week = c.get(Calendar.WEEK_OF_MONTH);
         day = c.get(Calendar.DAY_OF_WEEK);
     }
+    public boolean hasPast() {
+        return (toDate().getTime() < System.currentTimeMillis() && !isToday());
+    }
     public boolean isToday() {
+        //if (day == 4) return true;
         SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
         return format.format(new Date()).equals(format.format(toDate()));
     }

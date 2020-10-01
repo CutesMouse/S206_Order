@@ -27,7 +27,7 @@ public class FormPanel extends JPanel {
                 .format(info.getTime().toDate())+ DisplayText.DAYOFWEEK(info.getTime().day));
         this.scrollPane1.getVerticalScrollBar().setUnitIncrement(10);
         for (Restaurant r : info.getRestaurants()) {
-            rests.add(new RestaurantPanel(r));
+            rests.add(new RestaurantPanel(r,info));
         }
     }
 

@@ -23,7 +23,7 @@ new FormModel {
 						"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
 						"autoscrolls": false
 						"horizontalAlignment": 0
-						"preferredSize": new java.awt.Dimension( 230, 20 )
+						"preferredSize": &Dimension0 new java.awt.Dimension( 230, 20 )
 					}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 						"width": 1168
 						"height": 50
@@ -45,8 +45,8 @@ new FormModel {
 					} )
 					add( new FormComponent( "javax.swing.JTextField" ) {
 						name: "nid"
-						"preferredSize": &Dimension0 new java.awt.Dimension( 100, 30 )
-						"font": new java.awt.Font( "微軟正黑體", 0, 16 )
+						"preferredSize": &Dimension1 new java.awt.Dimension( 100, 30 )
+						"font": &Font1 new java.awt.Font( "微軟正黑體", 0, 16 )
 					}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 						"x": 485
 						"y": 60
@@ -69,13 +69,27 @@ new FormModel {
 					} )
 					add( new FormComponent( "javax.swing.JTextField" ) {
 						name: "sid"
-						"preferredSize": #Dimension0
-						"font": new java.awt.Font( "微軟正黑體", 0, 16 )
+						"preferredSize": #Dimension1
+						"font": &Font2 new java.awt.Font( "微軟正黑體", 0, 16 )
 					}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 						"x": 670
 						"y": 60
 						"height": 30
 						"width": 100
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button1"
+						"icon": &SwingIcon0 new com.jformdesigner.model.SwingIcon( 0, "/submit.png" )
+						"opaque": false
+						"borderPainted": false
+						"focusPainted": false
+						"contentAreaFilled": false
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "submit", true ) )
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+						"x": 1070
+						"y": 60
+						"width": 82
+						"height": 30
 					} )
 					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 						name: "scrollPane2"
@@ -91,25 +105,100 @@ new FormModel {
 						"width": 1165
 						"height": 520
 					} )
-					add( new FormComponent( "javax.swing.JButton" ) {
-						name: "button1"
-						"icon": new com.jformdesigner.model.SwingIcon( 0, "/submit.png" )
-						"opaque": false
-						"borderPainted": false
-						"focusPainted": false
-						"contentAreaFilled": false
-						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "submit", true ) )
-					}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-						"x": 1070
-						"y": 60
-						"width": 82
-						"height": 30
-					} )
 				}, new FormLayoutConstraints( null ) {
 					"title": "點餐"
 				} )
 				add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 					name: "querySingle"
+					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
+						name: "panel1"
+						add( new FormComponent( "javax.swing.JTextField" ) {
+							name: "des_formInfo5"
+							"text": "德光中學 S206 點餐查詢系統"
+							"font": #Font0
+							"editable": false
+							"focusable": false
+							"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+							"autoscrolls": false
+							"horizontalAlignment": 0
+							"preferredSize": #Dimension0
+						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+							"width": 1168
+							"height": 50
+							"x": 0
+							"y": 0
+						} )
+						add( new FormComponent( "javax.swing.JTextField" ) {
+							name: "des_formInfo6"
+							"text": "座號: "
+							"font": #Font0
+							"editable": false
+							"focusable": false
+							"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+							"autoscrolls": false
+						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+							"width": 65
+							"height": 30
+							"x": 415
+							"y": 60
+						} )
+						add( new FormComponent( "javax.swing.JTextField" ) {
+							name: "nid_s"
+							"preferredSize": #Dimension1
+							"font": #Font1
+						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+							"width": 100
+							"height": 30
+							"x": 485
+							"y": 60
+						} )
+						add( new FormComponent( "javax.swing.JTextField" ) {
+							name: "des_formInfo7"
+							"text": "學號: "
+							"font": #Font0
+							"editable": false
+							"focusable": false
+							"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+							"autoscrolls": false
+						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+							"width": 60
+							"height": 30
+							"x": 605
+							"y": 60
+						} )
+						add( new FormComponent( "javax.swing.JTextField" ) {
+							name: "sid_s"
+							"preferredSize": #Dimension1
+							"font": #Font2
+						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+							"width": 100
+							"height": 30
+							"x": 670
+							"y": 60
+						} )
+						add( new FormComponent( "javax.swing.JButton" ) {
+							name: "button2"
+							"icon": #SwingIcon0
+							"opaque": false
+							"borderPainted": false
+							"focusPainted": false
+							"contentAreaFilled": false
+							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "query", true ) )
+						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+							"width": 82
+							"height": 30
+							"x": 1040
+							"y": 60
+						} )
+						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) ) {
+							name: "LISTP"
+						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+							"x": 0
+							"y": 100
+							"height": 610
+							"width": 1165
+						} )
+					} )
 				}, new FormLayoutConstraints( null ) {
 					"title": "個人查詢"
 				} )
@@ -118,9 +207,16 @@ new FormModel {
 					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class javax.swing.BoxLayout ) {
 						"axis": 1
 					} ) {
-						name: "panel4"
-						add( new FormComponent( "com.cutesmouse.s206Order.window.TimeStampPicker" ) {
-							name: "timeStampPicker1"
+						name: "AllS"
+						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) ) {
+							name: "panel2"
+							"preferredSize": new java.awt.Dimension( 695, 50 )
+							add( new FormComponent( "com.cutesmouse.s206Order.window.TimeStampPicker" ) {
+								name: "timeStampPicker1"
+							} )
+						} )
+						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) ) {
+							name: "allQueryResult"
 						} )
 					} )
 				}, new FormLayoutConstraints( null ) {
@@ -302,7 +398,8 @@ new FormModel {
 							"borderPainted": false
 							"focusPainted": false
 							"contentAreaFilled": false
-							"preferredSize": &Dimension1 new java.awt.Dimension( 100, 30 )
+							"preferredSize": &Dimension2 new java.awt.Dimension( 100, 30 )
+							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showRestaurant", true ) )
 						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 							"width": 100
 							"height": 30
@@ -317,7 +414,8 @@ new FormModel {
 							"borderPainted": false
 							"focusPainted": false
 							"contentAreaFilled": false
-							"preferredSize": #Dimension1
+							"preferredSize": #Dimension2
+							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "ViewData", true ) )
 						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 							"width": 100
 							"height": 30
@@ -332,7 +430,7 @@ new FormModel {
 							"borderPainted": false
 							"focusPainted": false
 							"contentAreaFilled": false
-							"preferredSize": #Dimension1
+							"preferredSize": #Dimension2
 							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "ToggleStatus", true ) )
 						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 							"width": 100
@@ -348,7 +446,7 @@ new FormModel {
 							"borderPainted": false
 							"focusPainted": false
 							"contentAreaFilled": false
-							"preferredSize": #Dimension1
+							"preferredSize": #Dimension2
 							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "AddRestaurantToForm", true ) )
 						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 							"width": 166
