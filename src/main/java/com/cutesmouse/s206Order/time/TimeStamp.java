@@ -18,6 +18,14 @@ public class TimeStamp implements Serializable {
         week = c.get(Calendar.WEEK_OF_MONTH);
         day = c.get(Calendar.DAY_OF_WEEK);
     }
+    public TimeStamp(long time) {
+        Calendar c= Calendar.getInstance();
+        c.setTimeInMillis(time);
+        year = c.get(Calendar.YEAR);
+        month = c.get(Calendar.MONTH);
+        week = c.get(Calendar.WEEK_OF_MONTH);
+        day = c.get(Calendar.DAY_OF_WEEK);
+    }
     public boolean hasPast() {
         return (toDate().getTime() < System.currentTimeMillis() && !isToday());
     }

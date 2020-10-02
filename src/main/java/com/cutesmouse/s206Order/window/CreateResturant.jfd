@@ -92,6 +92,7 @@ new FormModel {
 				"borderPainted": false
 				"contentAreaFilled": false
 				"focusPainted": false
+				"toolTipText": "新增餐點"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "add", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 590
@@ -107,6 +108,7 @@ new FormModel {
 				"contentAreaFilled": false
 				"enabled": false
 				"focusPainted": false
+				"toolTipText": "移除餐點"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "removeMeals", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 30
@@ -121,6 +123,7 @@ new FormModel {
 				"borderPainted": false
 				"contentAreaFilled": false
 				"focusPainted": false
+				"toolTipText": "重新整理"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "refresh", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 30

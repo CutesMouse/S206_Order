@@ -6,10 +6,12 @@ package com.cutesmouse.s206Order.window;
 
 import java.awt.event.*;
 import com.cutesmouse.s206Order.time.TimeStamp;
+import com.cutesmouse.s206Order.time.TimeStampPickerEvent;
 import com.cutesmouse.s206Order.utils.DisplayText;
 
 import java.awt.*;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -19,7 +21,7 @@ import javax.swing.*;
  * @author CutesMouse
  */
 public class TimeStampPicker extends JPanel {
-    private ActionListener Listener;
+    private TimeStampPickerEvent Listener;
     public TimeStamp getTimeStamp() {
         if (years.getSelectedItem() == null || months.getSelectedItem() == null || weekOfMonth.getSelectedItem() == null) return null;
         if (weekOfMonth.getSelectedItem().toString().startsWith("第") && dayOfWeek.getSelectedItem() == null) return null;
@@ -35,7 +37,7 @@ public class TimeStampPicker extends JPanel {
         }
         return new TimeStamp(c);
     }
-    public void addSubmitListener(ActionListener e) {
+    public void addSubmitListener(TimeStampPickerEvent e) {
         this.Listener = e;
     }
     private int Int(String s) {
@@ -120,7 +122,33 @@ public class TimeStampPicker extends JPanel {
 
     private void submit(ActionEvent e) {
         if (this.Listener == null) return;
-        this.Listener.actionPerformed(e);
+        this.Listener.run(false,this);
+    }
+    public TimeStamp[] getTimeStamps() {
+        return SelectedStamps.toArray(new TimeStamp[0]);
+    }
+
+    private ArrayList<TimeStamp> SelectedStamps;
+    private TimeStamp p1;
+    private void MultiSelection(ActionEvent e) {
+        if (p1 == null) {
+            this.p1 = getTimeStamp();
+            range.setIcon(new ImageIcon(getClass().getResource("/point2.png")));
+            return;
+        }
+        TimeStamp p2 = getTimeStamp();
+        if (p1.toDate().getTime() > p2.toDate().getTime()) {
+            p2 = this.p1;
+            p1 = getTimeStamp();
+        }
+        SelectedStamps = new ArrayList<>();
+        for (long a = p1.toDate().getTime(); a <= p2.toDate().getTime(); a+= 1000 * 60 * 60 *24) {
+            SelectedStamps.add(new TimeStamp(a));
+        }
+        range.setIcon(new ImageIcon(getClass().getResource("/point1.png")));
+        if (this.Listener == null) return;
+        this.Listener.run(true,this);
+        p1 = null;
     }
 
     private void initComponents() {
@@ -135,6 +163,7 @@ public class TimeStampPicker extends JPanel {
         weekOfMonth = new JComboBox();
         dayOfWeek = new JComboBox();
         button1 = new JButton();
+        range = new JButton();
         button2 = new JButton();
 
         //======== this ========
@@ -257,9 +286,22 @@ public class TimeStampPicker extends JPanel {
         button1.setBorderPainted(false);
         button1.setFocusPainted(false);
         button1.setIcon(new ImageIcon(getClass().getResource("/today.png")));
+        button1.setToolTipText("\u8a2d\u5b9a\u70ba\u4eca\u5929");
         button1.addActionListener(e -> setToday(e));
         add(button1);
         button1.setBounds(0, 0, 30, 30);
+
+        //---- range ----
+        range.setOpaque(false);
+        range.setContentAreaFilled(false);
+        range.setBorderPainted(false);
+        range.setFocusPainted(false);
+        range.setIcon(new ImageIcon(getClass().getResource("/point1.png")));
+        range.setToolTipText("\u8a2d\u5b9a\u7bc4\u570d\uff0c\u9ede\u9078\u4e4b\u5f8c\u6703\u8a2d\u5b9a\u70ba\u8d77\u59cb\u9ede\uff0c\n\u4e4b\u5f8c\u8acb\u518d\u9078\u53d6\u53e6\u4e00\u500b\u9ede\uff0c\u518d\u9ede\u64ca\u6b64\u6309\u9215\u4e00\u6b21\u5373\u53ef\u3002");
+        range.setSelectedIcon(null);
+        range.addActionListener(e -> MultiSelection(e));
+        add(range);
+        range.setBounds(655, 0, 27, 30);
 
         //---- button2 ----
         button2.setOpaque(false);
@@ -267,9 +309,11 @@ public class TimeStampPicker extends JPanel {
         button2.setBorderPainted(false);
         button2.setFocusPainted(false);
         button2.setIcon(new ImageIcon(getClass().getResource("/send.png")));
+        button2.setMnemonic('\n');
+        button2.setToolTipText("\u9001\u51fa");
         button2.addActionListener(e -> submit(e));
         add(button2);
-        button2.setBounds(655, 0, 30, 30);
+        button2.setBounds(690, 0, 30, 30);
 
         {
             // compute preferred size
@@ -299,6 +343,7 @@ public class TimeStampPicker extends JPanel {
     private JComboBox weekOfMonth;
     private JComboBox dayOfWeek;
     private JButton button1;
+    private JButton range;
     private JButton button2;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

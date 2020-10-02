@@ -16,8 +16,10 @@ import com.cutesmouse.s206Order.utils.DayOrderedManager;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 import javax.swing.*;
 
 /**
@@ -37,6 +39,19 @@ public class ShowData extends JPanel {
         order.setListData(orders.toArray());
         setAmountText(orders);
         total.setText("今日總價格: "+DayOrderedManager.getAllOrderedOn(time).stream().mapToInt(p -> p.Totalprice).sum());
+    }
+    public ShowData(TimeStamp[] time) {
+        if (time.length == 0) {
+            this.time = null;
+            return;
+        }
+        this.time = time[0];
+        initComponents();
+        ArrayList<OrderedItem> orders = Arrays.stream(time).flatMap(p -> DayOrderedManager
+                .getAllOrderedOn(p).stream()).collect(Collectors.toCollection(ArrayList::new));
+        order.setListData(orders.toArray());
+        setAmountText(orders);
+        total.setText("今日總價格: "+orders.stream().mapToInt(p -> p.Totalprice).sum());
     }
 
     private void setAmountText(ArrayList<OrderedItem> orders) {

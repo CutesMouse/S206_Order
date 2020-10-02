@@ -18,6 +18,7 @@ import com.cutesmouse.s206Order.restaurant.RestaurantBuilder;
 import com.cutesmouse.s206Order.student.OrderedItem;
 import com.cutesmouse.s206Order.student.Student;
 import com.cutesmouse.s206Order.time.TimeStamp;
+import com.cutesmouse.s206Order.time.TimeStampPickerEvent;
 import com.cutesmouse.s206Order.utils.DayOrderedManager;
 import com.cutesmouse.s206Order.utils.DisplayText;
 import com.cutesmouse.s206Order.utils.ValueSearch;
@@ -47,7 +48,13 @@ public class OrderWindow extends JFrame {
         loadOrderPanel();
         scrollPane2.getVerticalScrollBar().setUnitIncrement(10);
     }
-    public void TimeStampPicker(ActionEvent e) {
+    public void TimeStampPicker(boolean b, TimeStampPicker e) {
+        if (b) {
+            allQueryResult.removeAll();
+            allQueryResult.add(new ShowData(e.getTimeStamps()));
+            allQueryResult.updateUI();
+            return;
+        }
         TimeStamp time = timeStampPicker1.getTimeStamp();
         if (time == null) return;
         allQueryResult.removeAll();
@@ -283,6 +290,8 @@ public class OrderWindow extends JFrame {
         if (SELECTED == null) return;
         if (!SELECTED.hasRestaurant()) return;
         JOptionPane.showMessageDialog(this,new ShowRestaurant(SELECTED.getForm()),"檢視餐廳",JOptionPane.PLAIN_MESSAGE);
+        loadNest();
+        loadButton();
         loadOrderPanel();
     }
 
@@ -362,7 +371,7 @@ public class OrderWindow extends JFrame {
         setRestaurant = new JButton();
 
         //======== this ========
-        setTitle("\u9ede\u9910\u4ecb\u9762");
+        setTitle("S206 \u9ede\u9910\u7cfb\u7d71");
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setIconImage(new ImageIcon(getClass().getResource("/icon.png")).getImage());
         addWindowListener(new WindowAdapter() {
@@ -432,6 +441,7 @@ public class OrderWindow extends JFrame {
                 button1.setBorderPainted(false);
                 button1.setFocusPainted(false);
                 button1.setContentAreaFilled(false);
+                button1.setToolTipText("\u9001\u51fa\u8a02\u55ae");
                 button1.addActionListener(e -> submit(e));
                 OrderPanel.add(button1);
                 button1.setBounds(1070, 60, 82, 30);
@@ -523,6 +533,7 @@ public class OrderWindow extends JFrame {
                     button2.setBorderPainted(false);
                     button2.setFocusPainted(false);
                     button2.setContentAreaFilled(false);
+                    button2.setToolTipText("\u9001\u51fa\u67e5\u8a62");
                     button2.addActionListener(e -> query(e));
                     panel1.add(button2);
                     button2.setBounds(1040, 60, 82, 30);
@@ -609,6 +620,7 @@ public class OrderWindow extends JFrame {
                     nextPage.setBorderPainted(false);
                     nextPage.setFocusPainted(false);
                     nextPage.setContentAreaFilled(false);
+                    nextPage.setToolTipText("\u5f8c\u4e00\u9801");
                     nextPage.addActionListener(e -> next_week(e));
                     settingPanel.add(nextPage);
                     nextPage.setBounds(172, 35, 30, 30);
@@ -620,6 +632,7 @@ public class OrderWindow extends JFrame {
                     lastPage.setBorderPainted(false);
                     lastPage.setFocusPainted(false);
                     lastPage.setContentAreaFilled(false);
+                    lastPage.setToolTipText("\u4e0a\u4e00\u9801");
                     lastPage.addActionListener(e -> last_week(e));
                     settingPanel.add(lastPage);
                     lastPage.setBounds(135, 35, 30, 30);
@@ -631,6 +644,7 @@ public class OrderWindow extends JFrame {
                     Today.setBorderPainted(false);
                     Today.setFocusPainted(false);
                     Today.setContentAreaFilled(false);
+                    Today.setToolTipText("\u8df3\u8f49\u81f3\u4eca\u65e5");
                     Today.addActionListener(e -> setToday(e));
                     settingPanel.add(Today);
                     Today.setBounds(209, 35, 30, 30);
@@ -655,6 +669,7 @@ public class OrderWindow extends JFrame {
                         edit.setBorderPainted(false);
                         edit.setContentAreaFilled(false);
                         edit.setEnabled(false);
+                        edit.setToolTipText("\u7de8\u8f2f\u9910\u5ef3");
                         edit.addActionListener(e -> edit(e));
                         restaurantPanel.add(edit);
                         edit.setBounds(1090, 95, 30, 30);
@@ -667,6 +682,7 @@ public class OrderWindow extends JFrame {
                         add.setBorderPainted(false);
                         add.setContentAreaFilled(false);
                         add.setFocusPainted(false);
+                        add.setToolTipText("\u65b0\u589e\u9910\u5ef3");
                         add.addActionListener(e -> add(e));
                         restaurantPanel.add(add);
                         add.setBounds(1090, 25, 30, 30);
@@ -678,6 +694,7 @@ public class OrderWindow extends JFrame {
                         remove.setContentAreaFilled(false);
                         remove.setEnabled(false);
                         remove.setFocusPainted(false);
+                        remove.setToolTipText("\u79fb\u9664\u9910\u5ef3");
                         remove.addActionListener(e -> remove(e));
                         restaurantPanel.add(remove);
                         remove.setBounds(1090, 60, 30, 30);
@@ -688,6 +705,7 @@ public class OrderWindow extends JFrame {
                         refresh.setBorderPainted(false);
                         refresh.setContentAreaFilled(false);
                         refresh.setFocusPainted(false);
+                        refresh.setToolTipText("\u91cd\u65b0\u8f09\u5165");
                         refresh.addActionListener(e -> refresh(e));
                         restaurantPanel.add(refresh);
                         refresh.setBounds(1090, 130, 30, 30);
@@ -713,6 +731,7 @@ public class OrderWindow extends JFrame {
                     restaurantList.setFocusPainted(false);
                     restaurantList.setContentAreaFilled(false);
                     restaurantList.setPreferredSize(new Dimension(100, 30));
+                    restaurantList.setToolTipText("\u6aa2\u8996\u4eca\u5929\u958b\u653e\u9ede\u9078\u7684\u9910\u5ef3");
                     restaurantList.addActionListener(e -> showRestaurant(e));
                     settingPanel.add(restaurantList);
                     restaurantList.setBounds(25, 320, 100, 30);
@@ -725,6 +744,7 @@ public class OrderWindow extends JFrame {
                     getData.setFocusPainted(false);
                     getData.setContentAreaFilled(false);
                     getData.setPreferredSize(new Dimension(100, 30));
+                    getData.setToolTipText("\u6aa2\u8996\u6216\u4fee\u6539\u4eca\u65e5\u5df2\u9001\u51fa\u7684\u9ede\u9910\u8cc7\u6599");
                     getData.addActionListener(e -> ViewData(e));
                     settingPanel.add(getData);
                     getData.setBounds(142, 320, 100, 30);
@@ -737,6 +757,7 @@ public class OrderWindow extends JFrame {
                     status.setFocusPainted(false);
                     status.setContentAreaFilled(false);
                     status.setPreferredSize(new Dimension(100, 30));
+                    status.setToolTipText("\u5207\u63db\u8868\u55ae\u72c0\u614b");
                     status.addActionListener(e -> ToggleStatus(e));
                     settingPanel.add(status);
                     status.setBounds(1045, 320, 100, 30);
@@ -749,6 +770,7 @@ public class OrderWindow extends JFrame {
                     setRestaurant.setFocusPainted(false);
                     setRestaurant.setContentAreaFilled(false);
                     setRestaurant.setPreferredSize(new Dimension(100, 30));
+                    setRestaurant.setToolTipText("\u8a2d\u5b9a\u4ee5\u4e0b\u6e05\u55ae\u4e2d\u6240\u9078\u7684\u9910\u5ef3\u9032\u5165\u4eca\u65e5\u9910\u5ef3\u5217\u8868");
                     setRestaurant.addActionListener(e -> AddRestaurantToForm(e));
                     settingPanel.add(setRestaurant);
                     setRestaurant.setBounds(259, 320, 166, 30);

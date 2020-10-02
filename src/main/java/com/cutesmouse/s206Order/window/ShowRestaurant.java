@@ -29,6 +29,9 @@ public class ShowRestaurant extends JPanel {
     private void removeMeals(ActionEvent e) {
         if (meals.getSelectedValue() == null) return;
         info.getRestaurants().remove(meals.getSelectedValue());
+        if (info.getRestaurants().size() == 0 && info.isToggled()) {
+            info.setToggled(false);
+        }
         meals.setListData(info.getRestaurants().toArray());
         remove.setEnabled(false);
     }

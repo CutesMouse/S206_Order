@@ -5,7 +5,7 @@ new FormModel {
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
 			name: "this"
-			"title": "點餐介面"
+			"title": "S206 點餐系統"
 			"defaultCloseOperation": 2
 			"iconImage": new com.jformdesigner.model.SwingIcon( 0, "/icon.png" )
 			addEvent( new FormEvent( "java.awt.event.WindowListener", "windowClosing", "thisWindowClosing", true ) )
@@ -84,6 +84,7 @@ new FormModel {
 						"borderPainted": false
 						"focusPainted": false
 						"contentAreaFilled": false
+						"toolTipText": "送出訂單"
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "submit", true ) )
 					}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 						"x": 1070
@@ -183,6 +184,7 @@ new FormModel {
 							"borderPainted": false
 							"focusPainted": false
 							"contentAreaFilled": false
+							"toolTipText": "送出查詢"
 							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "query", true ) )
 						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 							"width": 82
@@ -258,6 +260,7 @@ new FormModel {
 							"borderPainted": false
 							"focusPainted": false
 							"contentAreaFilled": false
+							"toolTipText": "後一頁"
 							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "next_week", true ) )
 						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 							"x": 172
@@ -273,6 +276,7 @@ new FormModel {
 							"borderPainted": false
 							"focusPainted": false
 							"contentAreaFilled": false
+							"toolTipText": "上一頁"
 							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "last_week", true ) )
 						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 							"width": 30
@@ -288,6 +292,7 @@ new FormModel {
 							"borderPainted": false
 							"focusPainted": false
 							"contentAreaFilled": false
+							"toolTipText": "跳轉至今日"
 							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "setToday", true ) )
 						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 							"width": 30
@@ -318,6 +323,7 @@ new FormModel {
 								"borderPainted": false
 								"contentAreaFilled": false
 								"enabled": false
+								"toolTipText": "編輯餐廳"
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "edit", true ) )
 							}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 								"width": 30
@@ -334,6 +340,7 @@ new FormModel {
 								"borderPainted": false
 								"contentAreaFilled": false
 								"focusPainted": false
+								"toolTipText": "新增餐廳"
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "add", true ) )
 							}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 								"width": 30
@@ -349,6 +356,7 @@ new FormModel {
 								"contentAreaFilled": false
 								"enabled": false
 								"focusPainted": false
+								"toolTipText": "移除餐廳"
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "remove", true ) )
 							}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 								"width": 30
@@ -363,6 +371,7 @@ new FormModel {
 								"borderPainted": false
 								"contentAreaFilled": false
 								"focusPainted": false
+								"toolTipText": "重新載入"
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "refresh", true ) )
 							}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 								"width": 30
@@ -399,6 +408,7 @@ new FormModel {
 							"focusPainted": false
 							"contentAreaFilled": false
 							"preferredSize": &Dimension2 new java.awt.Dimension( 100, 30 )
+							"toolTipText": "檢視今天開放點選的餐廳"
 							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showRestaurant", true ) )
 						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 							"width": 100
@@ -415,6 +425,7 @@ new FormModel {
 							"focusPainted": false
 							"contentAreaFilled": false
 							"preferredSize": #Dimension2
+							"toolTipText": "檢視或修改今日已送出的點餐資料"
 							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "ViewData", true ) )
 						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 							"width": 100
@@ -431,6 +442,7 @@ new FormModel {
 							"focusPainted": false
 							"contentAreaFilled": false
 							"preferredSize": #Dimension2
+							"toolTipText": "切換表單狀態"
 							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "ToggleStatus", true ) )
 						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 							"width": 100
@@ -447,6 +459,7 @@ new FormModel {
 							"focusPainted": false
 							"contentAreaFilled": false
 							"preferredSize": #Dimension2
+							"toolTipText": "設定以下清單中所選的餐廳進入今日餐廳列表"
 							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "AddRestaurantToForm", true ) )
 						}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 							"width": 166

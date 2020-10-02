@@ -169,6 +169,7 @@ public class CreateResturant extends JFrame {
         add.setBorderPainted(false);
         add.setContentAreaFilled(false);
         add.setFocusPainted(false);
+        add.setToolTipText("\u65b0\u589e\u9910\u9ede");
         add.addActionListener(e -> add(e));
         contentPane.add(add);
         add.setBounds(590, 140, 30, 30);
@@ -180,6 +181,7 @@ public class CreateResturant extends JFrame {
         remove.setContentAreaFilled(false);
         remove.setEnabled(false);
         remove.setFocusPainted(false);
+        remove.setToolTipText("\u79fb\u9664\u9910\u9ede");
         remove.addActionListener(e -> removeMeals(e));
         contentPane.add(remove);
         remove.setBounds(590, 175, 30, 30);
@@ -190,6 +192,7 @@ public class CreateResturant extends JFrame {
         refresh.setBorderPainted(false);
         refresh.setContentAreaFilled(false);
         refresh.setFocusPainted(false);
+        refresh.setToolTipText("\u91cd\u65b0\u6574\u7406");
         refresh.addActionListener(e -> refresh(e));
         contentPane.add(refresh);
         refresh.setBounds(590, 210, 30, 30);
