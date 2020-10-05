@@ -5,6 +5,7 @@
 package com.cutesmouse.s206Order.window;
 
 import java.awt.event.*;
+import javax.swing.event.*;
 
 import com.cutesmouse.s206Order.Main;
 import com.cutesmouse.s206Order.form.FormInfo;
@@ -35,11 +36,12 @@ import javax.swing.event.ListSelectionEvent;
  */
 public class OrderWindow extends JFrame {
     private int weekOffset;
+    private static final int DEFAULT_WIDTH = 1170;
+    private static final int DEFAULT_HEIGHT = 690;
     private DayBlock SELECTED;
     public OrderWindow() {
         DayBlock.MainWINDOW = this;
         initComponents();
-
         weekOffset = Calendar.getInstance(TimeZone.getDefault()).get(Calendar.WEEK_OF_MONTH);
         loadNest();
         restaurants.addListSelectionListener(this::valueChanged);
@@ -47,6 +49,18 @@ public class OrderWindow extends JFrame {
         timeStampPicker1.addSubmitListener(this::TimeStampPicker);
         loadOrderPanel();
         scrollPane2.getVerticalScrollBar().setUnitIncrement(10);
+        Dimension sc = Toolkit.getDefaultToolkit().getScreenSize();
+        double scale = 1.0;
+        if (sc.width < DEFAULT_WIDTH) {
+            scale = (double) sc.width / DEFAULT_WIDTH;
+        }
+        if (sc.height < DEFAULT_HEIGHT* scale) {
+            scale = (double) sc.height / DEFAULT_HEIGHT;
+        }
+        if (scale < 1.0) {
+            tabbedPane1.setSize((int)(DEFAULT_WIDTH*scale),(int)(DEFAULT_HEIGHT*scale));
+            size_display.setText(Double.toString(Math.round(scale * 10) / 10.0));
+        }
     }
     public void TimeStampPicker(boolean b, TimeStampPicker e) {
         if (b) {
@@ -324,9 +338,30 @@ public class OrderWindow extends JFrame {
         LISTP.updateUI();
     }
 
+    private void resize(KeyEvent e) {
+        if (e != null && e.getKeyCode() != KeyEvent.VK_ENTER) return;
+        double scale = e == null ? getScale() : Double.parseDouble(size_display.getText());
+        tabbedPane1.setSize((int) (DEFAULT_WIDTH * scale), (int) (DEFAULT_HEIGHT * scale));
+        setVisible(false);
+        setVisible(true);
+    }
+
+    private void resize(MouseEvent e) {
+        resize(((KeyEvent) null));
+    }
+
+    private void slider1StateChanged(ChangeEvent e) {
+        size_display.setText(Double.toString(Math.round(getScale() * 10) / 10D));
+    }
+
+    private double getScale() {
+        return size.getValue() / 50.0;
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         tabbedPane1 = new JTabbedPane();
+        orderScroll = new JScrollPane();
         OrderPanel = new JPanel();
         des_formInfo4 = new JTextField();
         des_formInfo2 = new JTextField();
@@ -369,6 +404,10 @@ public class OrderWindow extends JFrame {
         getData = new JButton();
         status = new JButton();
         setRestaurant = new JButton();
+        panel3 = new JPanel();
+        des_formInfo8 = new JTextField();
+        size = new JSlider();
+        size_display = new JTextField();
 
         //======== this ========
         setTitle("S206 \u9ede\u9910\u7cfb\u7d71");
@@ -387,94 +426,99 @@ public class OrderWindow extends JFrame {
         {
             tabbedPane1.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 18));
 
-            //======== OrderPanel ========
+            //======== orderScroll ========
             {
-                OrderPanel.setLayout(null);
 
-                //---- des_formInfo4 ----
-                des_formInfo4.setText("\u5fb7\u5149\u4e2d\u5b78 S206 \u9ede\u9910\u7cfb\u7d71");
-                des_formInfo4.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
-                des_formInfo4.setEditable(false);
-                des_formInfo4.setFocusable(false);
-                des_formInfo4.setBorder(null);
-                des_formInfo4.setAutoscrolls(false);
-                des_formInfo4.setHorizontalAlignment(SwingConstants.CENTER);
-                des_formInfo4.setPreferredSize(new Dimension(230, 20));
-                OrderPanel.add(des_formInfo4);
-                des_formInfo4.setBounds(0, 0, 1168, 50);
-
-                //---- des_formInfo2 ----
-                des_formInfo2.setText("\u5ea7\u865f: ");
-                des_formInfo2.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
-                des_formInfo2.setEditable(false);
-                des_formInfo2.setFocusable(false);
-                des_formInfo2.setBorder(null);
-                des_formInfo2.setAutoscrolls(false);
-                OrderPanel.add(des_formInfo2);
-                des_formInfo2.setBounds(415, 60, 65, 30);
-
-                //---- nid ----
-                nid.setPreferredSize(new Dimension(100, 30));
-                nid.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 16));
-                OrderPanel.add(nid);
-                nid.setBounds(485, 60, 100, 30);
-
-                //---- des_formInfo3 ----
-                des_formInfo3.setText("\u5b78\u865f: ");
-                des_formInfo3.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
-                des_formInfo3.setEditable(false);
-                des_formInfo3.setFocusable(false);
-                des_formInfo3.setBorder(null);
-                des_formInfo3.setAutoscrolls(false);
-                OrderPanel.add(des_formInfo3);
-                des_formInfo3.setBounds(605, 60, 60, 30);
-
-                //---- sid ----
-                sid.setPreferredSize(new Dimension(100, 30));
-                sid.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 16));
-                OrderPanel.add(sid);
-                sid.setBounds(670, 60, 100, 30);
-
-                //---- button1 ----
-                button1.setIcon(new ImageIcon(getClass().getResource("/submit.png")));
-                button1.setOpaque(false);
-                button1.setBorderPainted(false);
-                button1.setFocusPainted(false);
-                button1.setContentAreaFilled(false);
-                button1.setToolTipText("\u9001\u51fa\u8a02\u55ae");
-                button1.addActionListener(e -> submit(e));
-                OrderPanel.add(button1);
-                button1.setBounds(1070, 60, 82, 30);
-
-                //======== scrollPane2 ========
+                //======== OrderPanel ========
                 {
-                    scrollPane2.setBorder(null);
+                    OrderPanel.setLayout(null);
 
-                    //======== forms ========
+                    //---- des_formInfo4 ----
+                    des_formInfo4.setText("\u5fb7\u5149\u4e2d\u5b78 S206 \u9ede\u9910\u7cfb\u7d71");
+                    des_formInfo4.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
+                    des_formInfo4.setEditable(false);
+                    des_formInfo4.setFocusable(false);
+                    des_formInfo4.setBorder(null);
+                    des_formInfo4.setAutoscrolls(false);
+                    des_formInfo4.setHorizontalAlignment(SwingConstants.CENTER);
+                    des_formInfo4.setPreferredSize(new Dimension(230, 20));
+                    OrderPanel.add(des_formInfo4);
+                    des_formInfo4.setBounds(0, 0, 1168, 50);
+
+                    //---- des_formInfo2 ----
+                    des_formInfo2.setText("\u5ea7\u865f: ");
+                    des_formInfo2.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
+                    des_formInfo2.setEditable(false);
+                    des_formInfo2.setFocusable(false);
+                    des_formInfo2.setBorder(null);
+                    des_formInfo2.setAutoscrolls(false);
+                    OrderPanel.add(des_formInfo2);
+                    des_formInfo2.setBounds(415, 60, 65, 30);
+
+                    //---- nid ----
+                    nid.setPreferredSize(new Dimension(100, 30));
+                    nid.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 16));
+                    OrderPanel.add(nid);
+                    nid.setBounds(485, 60, 100, 30);
+
+                    //---- des_formInfo3 ----
+                    des_formInfo3.setText("\u5b78\u865f: ");
+                    des_formInfo3.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
+                    des_formInfo3.setEditable(false);
+                    des_formInfo3.setFocusable(false);
+                    des_formInfo3.setBorder(null);
+                    des_formInfo3.setAutoscrolls(false);
+                    OrderPanel.add(des_formInfo3);
+                    des_formInfo3.setBounds(605, 60, 60, 30);
+
+                    //---- sid ----
+                    sid.setPreferredSize(new Dimension(100, 30));
+                    sid.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 16));
+                    OrderPanel.add(sid);
+                    sid.setBounds(670, 60, 100, 30);
+
+                    //---- button1 ----
+                    button1.setIcon(new ImageIcon(getClass().getResource("/submit.png")));
+                    button1.setOpaque(false);
+                    button1.setBorderPainted(false);
+                    button1.setFocusPainted(false);
+                    button1.setContentAreaFilled(false);
+                    button1.setToolTipText("\u9001\u51fa\u8a02\u55ae");
+                    button1.addActionListener(e -> submit(e));
+                    OrderPanel.add(button1);
+                    button1.setBounds(1070, 60, 82, 30);
+
+                    //======== scrollPane2 ========
                     {
-                        forms.setLayout(new BoxLayout(forms, BoxLayout.Y_AXIS));
-                    }
-                    scrollPane2.setViewportView(forms);
-                }
-                OrderPanel.add(scrollPane2);
-                scrollPane2.setBounds(0, 110, 1165, 520);
+                        scrollPane2.setBorder(null);
 
-                {
-                    // compute preferred size
-                    Dimension preferredSize = new Dimension();
-                    for(int i = 0; i < OrderPanel.getComponentCount(); i++) {
-                        Rectangle bounds = OrderPanel.getComponent(i).getBounds();
-                        preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
-                        preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
+                        //======== forms ========
+                        {
+                            forms.setLayout(new BoxLayout(forms, BoxLayout.Y_AXIS));
+                        }
+                        scrollPane2.setViewportView(forms);
                     }
-                    Insets insets = OrderPanel.getInsets();
-                    preferredSize.width += insets.right;
-                    preferredSize.height += insets.bottom;
-                    OrderPanel.setMinimumSize(preferredSize);
-                    OrderPanel.setPreferredSize(preferredSize);
+                    OrderPanel.add(scrollPane2);
+                    scrollPane2.setBounds(0, 110, 1165, 520);
+
+                    {
+                        // compute preferred size
+                        Dimension preferredSize = new Dimension();
+                        for(int i = 0; i < OrderPanel.getComponentCount(); i++) {
+                            Rectangle bounds = OrderPanel.getComponent(i).getBounds();
+                            preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
+                            preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
+                        }
+                        Insets insets = OrderPanel.getInsets();
+                        preferredSize.width += insets.right;
+                        preferredSize.height += insets.bottom;
+                        OrderPanel.setMinimumSize(preferredSize);
+                        OrderPanel.setPreferredSize(preferredSize);
+                    }
                 }
+                orderScroll.setViewportView(OrderPanel);
             }
-            tabbedPane1.addTab("\u9ede\u9910", OrderPanel);
+            tabbedPane1.addTab("\u9ede\u9910", orderScroll);
 
             //======== querySingle ========
             {
@@ -484,7 +528,7 @@ public class OrderWindow extends JFrame {
                     panel1.setLayout(null);
 
                     //---- des_formInfo5 ----
-                    des_formInfo5.setText("\u5fb7\u5149\u4e2d\u5b78 S206 \u9ede\u9910\u67e5\u8a62\u7cfb\u7d71");
+                    des_formInfo5.setText("\u5fb7\u5149\u4e2d\u5b78 S206 \u67e5\u8a62\u7cfb\u7d71");
                     des_formInfo5.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
                     des_formInfo5.setEditable(false);
                     des_formInfo5.setFocusable(false);
@@ -536,7 +580,7 @@ public class OrderWindow extends JFrame {
                     button2.setToolTipText("\u9001\u51fa\u67e5\u8a62");
                     button2.addActionListener(e -> query(e));
                     panel1.add(button2);
-                    button2.setBounds(1040, 60, 82, 30);
+                    button2.setBounds(965, 60, 82, 30);
 
                     //======== LISTP ========
                     {
@@ -774,10 +818,61 @@ public class OrderWindow extends JFrame {
                     setRestaurant.addActionListener(e -> AddRestaurantToForm(e));
                     settingPanel.add(setRestaurant);
                     setRestaurant.setBounds(259, 320, 166, 30);
+
+                    {
+                        // compute preferred size
+                        Dimension preferredSize = new Dimension();
+                        for(int i = 0; i < settingPanel.getComponentCount(); i++) {
+                            Rectangle bounds = settingPanel.getComponent(i).getBounds();
+                            preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
+                            preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
+                        }
+                        Insets insets = settingPanel.getInsets();
+                        preferredSize.width += insets.right;
+                        preferredSize.height += insets.bottom;
+                        settingPanel.setMinimumSize(preferredSize);
+                        settingPanel.setPreferredSize(preferredSize);
+                    }
                 }
                 settings.setViewportView(settingPanel);
             }
             tabbedPane1.addTab("\u83dc\u55ae\u8a2d\u5b9a", settings);
+
+            //======== panel3 ========
+            {
+                panel3.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+                //---- des_formInfo8 ----
+                des_formInfo8.setText("\u8996\u7a97\u5927\u5c0f");
+                des_formInfo8.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
+                des_formInfo8.setEditable(false);
+                des_formInfo8.setFocusable(false);
+                des_formInfo8.setBorder(null);
+                panel3.add(des_formInfo8);
+
+                //---- size ----
+                size.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseReleased(MouseEvent e) {
+                        resize(e);
+                    }
+                });
+                size.addChangeListener(e -> slider1StateChanged(e));
+                panel3.add(size);
+
+                //---- size_display ----
+                size_display.setText("1.0");
+                size_display.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
+                size_display.setBorder(null);
+                size_display.addKeyListener(new KeyAdapter() {
+                    @Override
+                    public void keyReleased(KeyEvent e) {
+                        resize(e);
+                    }
+                });
+                panel3.add(size_display);
+            }
+            tabbedPane1.addTab("\u76f8\u5bb9\u6027", panel3);
         }
         contentPane.add(tabbedPane1);
         tabbedPane1.setBounds(0, 0, 1170, 690);
@@ -803,6 +898,7 @@ public class OrderWindow extends JFrame {
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     private JTabbedPane tabbedPane1;
+    private JScrollPane orderScroll;
     private JPanel OrderPanel;
     private JTextField des_formInfo4;
     private JTextField des_formInfo2;
@@ -845,5 +941,9 @@ public class OrderWindow extends JFrame {
     private JButton getData;
     private JButton status;
     private JButton setRestaurant;
+    private JPanel panel3;
+    private JTextField des_formInfo8;
+    private JSlider size;
+    private JTextField size_display;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }
