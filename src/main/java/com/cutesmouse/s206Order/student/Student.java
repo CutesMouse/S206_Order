@@ -6,9 +6,9 @@ import java.util.List;
 
 public class Student implements Serializable {
     public static List<Student> STUDENTS;
-    public static Student getStudent(int nid, int sid) {
+    public static Student getStudent(int nid, String sid) {
         for (Student s : STUDENTS) {
-            if (s.nid == nid && s.sid == sid) return s;
+            if (s.nid == nid && s.sid.equals(sid)) return s;
         }
         return new Student(nid,sid);
     }
@@ -16,10 +16,10 @@ public class Student implements Serializable {
         STUDENTS.add(st);
     }
     public int nid;
-    public int sid;
+    public String sid;
     private int money;
     public ArrayList<OrderedItem> ORDERED;
-    public Student(int nid, int sid) {
+    public Student(int nid, String sid) {
         this.nid = nid;
         this.sid = sid;
         this.money = 0;
@@ -52,6 +52,6 @@ public class Student implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Student student = (Student) o;
-        return nid == student.nid && sid == student.sid;
+        return nid == student.nid && sid.equals(student.sid);
     }
 }

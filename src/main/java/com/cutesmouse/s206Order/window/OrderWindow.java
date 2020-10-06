@@ -273,7 +273,7 @@ public class OrderWindow extends JFrame {
             JOptionPane.showMessageDialog(this,"請輸入座號!","錯誤",JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if (sid.getText().isEmpty() || !sid.getText().matches("\\d+")) {
+        if (sid.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this,"請輸入學號!","錯誤",JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -288,7 +288,7 @@ public class OrderWindow extends JFrame {
             return;
         }
         if (JOptionPane.showConfirmDialog(this,new SubmitPanel(meals),"帳單明細",JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
-            Student student = Student.getStudent(Integer.parseInt(nid.getText()), Integer.parseInt(sid.getText()));
+            Student student = Student.getStudent(Integer.parseInt(nid.getText()),sid.getText());
             for (MealData md : meals) {
                 student.Order(new OrderedItem(md.getRestaurant(),md.asMealOrder(),md.getTime()));
             }
@@ -320,11 +320,11 @@ public class OrderWindow extends JFrame {
             JOptionPane.showMessageDialog(this,"請輸入座號!","錯誤",JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if (sid_s.getText().isEmpty() || !sid_s.getText().matches("\\d+")) {
+        if (sid_s.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this,"請輸入學號!","錯誤",JOptionPane.ERROR_MESSAGE);
             return;
         }
-        Student s = Student.getStudent(Integer.parseInt(nid_s.getText()),Integer.parseInt(sid_s.getText()));
+        Student s = Student.getStudent(Integer.parseInt(nid_s.getText()),sid_s.getText());
         ArrayList<MealData> md = new ArrayList<>();
         for (OrderedItem item : s.ORDERED) {
             if (!item.timeStamp.hasPast()) {
@@ -408,6 +408,7 @@ public class OrderWindow extends JFrame {
         des_formInfo8 = new JTextField();
         size = new JSlider();
         size_display = new JTextField();
+        des_formInfo9 = new JTextField();
 
         //======== this ========
         setTitle("S206 \u9ede\u9910\u7cfb\u7d71");
@@ -443,7 +444,7 @@ public class OrderWindow extends JFrame {
                     des_formInfo4.setHorizontalAlignment(SwingConstants.CENTER);
                     des_formInfo4.setPreferredSize(new Dimension(230, 20));
                     OrderPanel.add(des_formInfo4);
-                    des_formInfo4.setBounds(0, 0, 1168, 50);
+                    des_formInfo4.setBounds(0, 0, 490, 50);
 
                     //---- des_formInfo2 ----
                     des_formInfo2.setText("\u5ea7\u865f: ");
@@ -453,29 +454,29 @@ public class OrderWindow extends JFrame {
                     des_formInfo2.setBorder(null);
                     des_formInfo2.setAutoscrolls(false);
                     OrderPanel.add(des_formInfo2);
-                    des_formInfo2.setBounds(415, 60, 65, 30);
+                    des_formInfo2.setBounds(15, 60, 65, 30);
 
                     //---- nid ----
                     nid.setPreferredSize(new Dimension(100, 30));
                     nid.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 16));
                     OrderPanel.add(nid);
-                    nid.setBounds(485, 60, 100, 30);
+                    nid.setBounds(85, 60, 100, 30);
 
                     //---- des_formInfo3 ----
-                    des_formInfo3.setText("\u5b78\u865f: ");
+                    des_formInfo3.setText("\u59d3\u540d: ");
                     des_formInfo3.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
                     des_formInfo3.setEditable(false);
                     des_formInfo3.setFocusable(false);
                     des_formInfo3.setBorder(null);
                     des_formInfo3.setAutoscrolls(false);
                     OrderPanel.add(des_formInfo3);
-                    des_formInfo3.setBounds(605, 60, 60, 30);
+                    des_formInfo3.setBounds(205, 60, 60, 30);
 
                     //---- sid ----
                     sid.setPreferredSize(new Dimension(100, 30));
                     sid.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 16));
                     OrderPanel.add(sid);
-                    sid.setBounds(670, 60, 100, 30);
+                    sid.setBounds(270, 60, 100, 30);
 
                     //---- button1 ----
                     button1.setIcon(new ImageIcon(getClass().getResource("/submit.png")));
@@ -486,7 +487,7 @@ public class OrderWindow extends JFrame {
                     button1.setToolTipText("\u9001\u51fa\u8a02\u55ae");
                     button1.addActionListener(e -> submit(e));
                     OrderPanel.add(button1);
-                    button1.setBounds(1070, 60, 82, 30);
+                    button1.setBounds(395, 60, 82, 30);
 
                     //======== scrollPane2 ========
                     {
@@ -537,7 +538,7 @@ public class OrderWindow extends JFrame {
                     des_formInfo5.setHorizontalAlignment(SwingConstants.CENTER);
                     des_formInfo5.setPreferredSize(new Dimension(230, 20));
                     panel1.add(des_formInfo5);
-                    des_formInfo5.setBounds(0, 0, 1168, 50);
+                    des_formInfo5.setBounds(0, 0, 490, 50);
 
                     //---- des_formInfo6 ----
                     des_formInfo6.setText("\u5ea7\u865f: ");
@@ -547,29 +548,29 @@ public class OrderWindow extends JFrame {
                     des_formInfo6.setBorder(null);
                     des_formInfo6.setAutoscrolls(false);
                     panel1.add(des_formInfo6);
-                    des_formInfo6.setBounds(415, 60, 65, 30);
+                    des_formInfo6.setBounds(15, 60, 65, 30);
 
                     //---- nid_s ----
                     nid_s.setPreferredSize(new Dimension(100, 30));
                     nid_s.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 16));
                     panel1.add(nid_s);
-                    nid_s.setBounds(485, 60, 100, 30);
+                    nid_s.setBounds(85, 60, 100, 30);
 
                     //---- des_formInfo7 ----
-                    des_formInfo7.setText("\u5b78\u865f: ");
+                    des_formInfo7.setText("\u59d3\u540d: ");
                     des_formInfo7.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
                     des_formInfo7.setEditable(false);
                     des_formInfo7.setFocusable(false);
                     des_formInfo7.setBorder(null);
                     des_formInfo7.setAutoscrolls(false);
                     panel1.add(des_formInfo7);
-                    des_formInfo7.setBounds(605, 60, 60, 30);
+                    des_formInfo7.setBounds(205, 60, 60, 30);
 
                     //---- sid_s ----
                     sid_s.setPreferredSize(new Dimension(100, 30));
                     sid_s.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 16));
                     panel1.add(sid_s);
-                    sid_s.setBounds(670, 60, 100, 30);
+                    sid_s.setBounds(270, 60, 100, 30);
 
                     //---- button2 ----
                     button2.setIcon(new ImageIcon(getClass().getResource("/submit.png")));
@@ -580,7 +581,7 @@ public class OrderWindow extends JFrame {
                     button2.setToolTipText("\u9001\u51fa\u67e5\u8a62");
                     button2.addActionListener(e -> query(e));
                     panel1.add(button2);
-                    button2.setBounds(965, 60, 82, 30);
+                    button2.setBounds(395, 60, 82, 30);
 
                     //======== LISTP ========
                     {
@@ -705,7 +706,7 @@ public class OrderWindow extends JFrame {
                             scrollPane1.setViewportView(restaurants);
                         }
                         restaurantPanel.add(scrollPane1);
-                        scrollPane1.setBounds(0, 20, 1080, 265);
+                        scrollPane1.setBounds(35, 20, 1080, 265);
 
                         //---- edit ----
                         edit.setForeground(Color.red);
@@ -716,7 +717,7 @@ public class OrderWindow extends JFrame {
                         edit.setToolTipText("\u7de8\u8f2f\u9910\u5ef3");
                         edit.addActionListener(e -> edit(e));
                         restaurantPanel.add(edit);
-                        edit.setBounds(1090, 95, 30, 30);
+                        edit.setBounds(0, 90, 30, 30);
 
                         //---- add ----
                         add.setForeground(new Color(0, 153, 0));
@@ -729,7 +730,7 @@ public class OrderWindow extends JFrame {
                         add.setToolTipText("\u65b0\u589e\u9910\u5ef3");
                         add.addActionListener(e -> add(e));
                         restaurantPanel.add(add);
-                        add.setBounds(1090, 25, 30, 30);
+                        add.setBounds(0, 20, 30, 30);
 
                         //---- remove ----
                         remove.setForeground(Color.red);
@@ -741,7 +742,7 @@ public class OrderWindow extends JFrame {
                         remove.setToolTipText("\u79fb\u9664\u9910\u5ef3");
                         remove.addActionListener(e -> remove(e));
                         restaurantPanel.add(remove);
-                        remove.setBounds(1090, 60, 30, 30);
+                        remove.setBounds(0, 55, 30, 30);
 
                         //---- refresh ----
                         refresh.setForeground(Color.red);
@@ -752,7 +753,7 @@ public class OrderWindow extends JFrame {
                         refresh.setToolTipText("\u91cd\u65b0\u8f09\u5165");
                         refresh.addActionListener(e -> refresh(e));
                         restaurantPanel.add(refresh);
-                        refresh.setBounds(1090, 130, 30, 30);
+                        refresh.setBounds(0, 125, 30, 30);
 
                         //---- refresh2 ----
                         refresh2.setForeground(Color.red);
@@ -762,7 +763,7 @@ public class OrderWindow extends JFrame {
                         refresh2.setFocusPainted(false);
                         refresh2.addActionListener(e -> sort(e));
                         restaurantPanel.add(refresh2);
-                        refresh2.setBounds(1090, 240, 30, 30);
+                        refresh2.setBounds(0, 240, 30, 30);
                     }
                     settingPanel.add(restaurantPanel);
                     restaurantPanel.setBounds(25, 350, 1135, 285);
@@ -791,7 +792,7 @@ public class OrderWindow extends JFrame {
                     getData.setToolTipText("\u6aa2\u8996\u6216\u4fee\u6539\u4eca\u65e5\u5df2\u9001\u51fa\u7684\u9ede\u9910\u8cc7\u6599");
                     getData.addActionListener(e -> ViewData(e));
                     settingPanel.add(getData);
-                    getData.setBounds(142, 320, 100, 30);
+                    getData.setBounds(144, 320, 100, 30);
 
                     //---- status ----
                     status.setIcon(new ImageIcon(getClass().getResource("/toggleFill_Off.png")));
@@ -804,7 +805,7 @@ public class OrderWindow extends JFrame {
                     status.setToolTipText("\u5207\u63db\u8868\u55ae\u72c0\u614b");
                     status.addActionListener(e -> ToggleStatus(e));
                     settingPanel.add(status);
-                    status.setBounds(1045, 320, 100, 30);
+                    status.setBounds(448, 320, 100, 30);
 
                     //---- setRestaurant ----
                     setRestaurant.setIcon(new ImageIcon(getClass().getResource("/AddRestaurant.png")));
@@ -817,7 +818,7 @@ public class OrderWindow extends JFrame {
                     setRestaurant.setToolTipText("\u8a2d\u5b9a\u4ee5\u4e0b\u6e05\u55ae\u4e2d\u6240\u9078\u7684\u9910\u5ef3\u9032\u5165\u4eca\u65e5\u9910\u5ef3\u5217\u8868");
                     setRestaurant.addActionListener(e -> AddRestaurantToForm(e));
                     settingPanel.add(setRestaurant);
-                    setRestaurant.setBounds(259, 320, 166, 30);
+                    setRestaurant.setBounds(263, 320, 166, 30);
 
                     {
                         // compute preferred size
@@ -871,6 +872,14 @@ public class OrderWindow extends JFrame {
                     }
                 });
                 panel3.add(size_display);
+
+                //---- des_formInfo9 ----
+                des_formInfo9.setText("(\u975e\u5fc5\u8981\u8acb\u52ff\u66f4\u52d5)");
+                des_formInfo9.setFont(new Font("\u5fae\u8edf\u6b63\u9ed1\u9ad4", Font.PLAIN, 20));
+                des_formInfo9.setEditable(false);
+                des_formInfo9.setFocusable(false);
+                des_formInfo9.setBorder(null);
+                panel3.add(des_formInfo9);
             }
             tabbedPane1.addTab("\u76f8\u5bb9\u6027", panel3);
         }
@@ -945,5 +954,6 @@ public class OrderWindow extends JFrame {
     private JTextField des_formInfo8;
     private JSlider size;
     private JTextField size_display;
+    private JTextField des_formInfo9;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }
